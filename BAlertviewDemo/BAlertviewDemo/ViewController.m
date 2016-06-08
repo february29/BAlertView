@@ -59,7 +59,7 @@
 -(void)showToast{
     
     //普通用法
-    [[BAlertModal sharedInstance]makeToast:@"hello777777877777777877777777ello777777877777777ello73333777778777777777733"];
+    [[BAlertModal sharedInstance]makeToast:@"he00000003"];
     
    
     
