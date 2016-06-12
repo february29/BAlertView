@@ -138,7 +138,7 @@ static BToastLable *toastView = nil;
             toastView.textColor = BAlertToastTextColor;
             toastView.font = [UIFont systemFontOfSize:BAlertToastFont];
             toastView.layer.masksToBounds = YES;
-            toastView.layer.cornerRadius = 3.0f;
+            toastView.layer.cornerRadius = 4.0f;
             toastView.textAlignment = NSTextAlignmentCenter;
             toastView.alpha = 0;
             toastView.numberOfLines = 0;
@@ -153,7 +153,7 @@ static BToastLable *toastView = nil;
     
    
     
-    CGFloat width = [self stringText:message font:BAlertToastFont isHeightFixed:YES fixedValue:30];
+    CGFloat width = [self stringText:message font:BAlertToastFont isHeightFixed:YES fixedValue:30]+10;
     CGFloat height = 30;
     if (width > MSCW - 20) {
         width = MSCW - 20;

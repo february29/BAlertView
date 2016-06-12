@@ -7,16 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		217606E11D0CF816003C455E /* BAlertModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 217606E01D0CF816003C455E /* BAlertModal.m */; settings = {ASSET_TAGS = (); }; };
 		21D251611CE2DB7900E8C1E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251601CE2DB7900E8C1E5 /* main.m */; };
 		21D251641CE2DB7900E8C1E5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251631CE2DB7900E8C1E5 /* AppDelegate.m */; };
 		21D251671CE2DB7900E8C1E5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251661CE2DB7900E8C1E5 /* ViewController.m */; };
 		21D2516A1CE2DB7900E8C1E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21D251681CE2DB7900E8C1E5 /* Main.storyboard */; };
 		21D2516C1CE2DB7900E8C1E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21D2516B1CE2DB7900E8C1E5 /* Assets.xcassets */; };
 		21D2516F1CE2DB7900E8C1E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21D2516D1CE2DB7900E8C1E5 /* LaunchScreen.storyboard */; };
-		21D251791CE2DBD400E8C1E5 /* BAlertModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251781CE2DBD400E8C1E5 /* BAlertModal.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		217606DE1D0CF816003C455E /* BAlertConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAlertConfig.h; sourceTree = "<group>"; };
+		217606DF1D0CF816003C455E /* BAlertModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAlertModal.h; sourceTree = "<group>"; };
+		217606E01D0CF816003C455E /* BAlertModal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAlertModal.m; sourceTree = "<group>"; };
 		21D2515C1CE2DB7900E8C1E5 /* BAlertviewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BAlertviewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21D251601CE2DB7900E8C1E5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		21D251621CE2DB7900E8C1E5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -27,9 +30,6 @@
 		21D2516B1CE2DB7900E8C1E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		21D2516E1CE2DB7900E8C1E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		21D251701CE2DB7900E8C1E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		21D251771CE2DBD400E8C1E5 /* BAlertModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAlertModal.h; sourceTree = "<group>"; };
-		21D251781CE2DBD400E8C1E5 /* BAlertModal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAlertModal.m; sourceTree = "<group>"; };
-		21D2517F1CE2E4A000E8C1E5 /* BAlertConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BAlertConfig.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +43,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		217606DD1D0CF816003C455E /* BAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				217606DE1D0CF816003C455E /* BAlertConfig.h */,
+				217606DF1D0CF816003C455E /* BAlertModal.h */,
+				217606E01D0CF816003C455E /* BAlertModal.m */,
+			);
+			name = BAlertView;
+			path = ../../BAlertView;
+			sourceTree = "<group>";
+		};
 		21D251531CE2DB7900E8C1E5 = {
 			isa = PBXGroup;
 			children = (
@@ -62,7 +73,7 @@
 		21D2515E1CE2DB7900E8C1E5 /* BAlertviewDemo */ = {
 			isa = PBXGroup;
 			children = (
-				21D251761CE2DB9F00E8C1E5 /* BAlertView */,
+				217606DD1D0CF816003C455E /* BAlertView */,
 				21D251621CE2DB7900E8C1E5 /* AppDelegate.h */,
 				21D251631CE2DB7900E8C1E5 /* AppDelegate.m */,
 				21D251651CE2DB7900E8C1E5 /* ViewController.h */,
@@ -82,16 +93,6 @@
 				21D251601CE2DB7900E8C1E5 /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		21D251761CE2DB9F00E8C1E5 /* BAlertView */ = {
-			isa = PBXGroup;
-			children = (
-				21D251771CE2DBD400E8C1E5 /* BAlertModal.h */,
-				21D251781CE2DBD400E8C1E5 /* BAlertModal.m */,
-				21D2517F1CE2E4A000E8C1E5 /* BAlertConfig.h */,
-			);
-			path = BAlertView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,10 +165,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21D251791CE2DBD400E8C1E5 /* BAlertModal.m in Sources */,
 				21D251671CE2DB7900E8C1E5 /* ViewController.m in Sources */,
 				21D251641CE2DB7900E8C1E5 /* AppDelegate.m in Sources */,
 				21D251611CE2DB7900E8C1E5 /* main.m in Sources */,
+				217606E11D0CF816003C455E /* BAlertModal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +315,7 @@
 				21D251751CE2DB7900E8C1E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
