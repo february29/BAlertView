@@ -11,6 +11,7 @@
 
 #define MSCW [UIScreen mainScreen].bounds.size.width
 #define MSCH [UIScreen mainScreen].bounds.size.height  //如果带导航条toast 要在这里 [UIScreen mainScreen].bounds.size.height-64
+#define BAlertViewAPPStatusBarHidden NO  //如果app中没有任务栏这里设置为YES
 
 
 

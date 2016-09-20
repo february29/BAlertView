@@ -15,7 +15,8 @@
 
 typedef NS_ENUM(NSInteger,BAlertViewAnimateType){
     BAlertViewAnimateCenter,
-    BAlertViewAnimateBottom
+    BAlertViewAnimateBottom,
+    BAlertViewAnimateDropList
     
 };
 
@@ -48,7 +49,11 @@ typedef NS_ENUM(NSInteger,BAlertViewAnimateType){
     [_backBtn setBackgroundColor:_backgroundColor];
     [self.view addSubview:_backBtn];
 }
-
+//ios8 隐藏状态栏
+- (BOOL)prefersStatusBarHidden
+{
+    return BAlertViewAPPStatusBarHidden; // 返回NO表示要显示，返回YES将hiden
+}
 -(void)setBackgroundColor:(UIColor *)backgroundColor{
     
     if(_backgroundColor != backgroundColor){
@@ -270,7 +275,17 @@ static BToastLable *toastView = nil;
             break;
             
         }
-            
+        case BAlertModalViewDropList:
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [window makeKeyAndVisible];
+                if(animated){
+                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateDropList];
+                }
+            });
+
+            break;
+        }
             
         default:
             break;
@@ -326,6 +341,23 @@ static BToastLable *toastView = nil;
 
             break;
         }
+        case BAlertViewAnimateDropList:
+        {
+            float tableH = contentView.frame.size.height;
+            contentView.alpha = 0.0f;
+            CGRect frame = contentView.frame;
+            frame.size.height = 0;
+            contentView.frame = frame;
+            frame.size.height = tableH;
+            [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+            [UIView setAnimationCurve:UIViewAnimationCurveLinear];
+            
+            contentView.frame = frame;
+            contentView.alpha = 1;
+            [UIView commitAnimations];
+            
+            break;
+        }
     
             
         default:
@@ -346,9 +378,7 @@ static BToastLable *toastView = nil;
 }
 
 - (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)())completion{
-   //还原为默认
-    self.backgroundColor = BAlertViewBackGroundColor;
-    self.shouldTapOutSideClosed = BAlertViewShouldTapOutsideClosed;
+   
     
     if(!animated){
         [self cleanup];
@@ -379,6 +409,48 @@ static BToastLable *toastView = nil;
                     completion();
                 }
             }];
+
+            break;
+        }
+        case BAlertModalViewDropList:
+        {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                
+                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                    viewController.backBtn.alpha = 0;
+                }];
+                
+                contentView.layer.shouldRasterize = YES;
+                
+                [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                        contentView.alpha = 0;
+                        //contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
+                    
+                    
+                } completion:^(BOOL finished2){
+                        [self cleanup];
+                        if(completion){
+                            completion();
+                        }
+                        
+                    
+                }];
+                
+            });
+
+            
+//            [UIView animateWithDuration:0.35f animations:^{
+//               
+//                CGRect sf = self.frame;
+//                sf.size.height = 30;
+//                self.frame = sf;
+//                CGRect frame = tv.frame;
+//                frame.size.height = 0;
+//                tv.frame = frame;
+//                
+//            }];
 
             break;
         }
@@ -420,6 +492,9 @@ static BToastLable *toastView = nil;
 
 - (void)cleanup{
     
+    //还原为默认
+    self.backgroundColor = BAlertViewBackGroundColor;
+    self.shouldTapOutSideClosed = BAlertViewShouldTapOutsideClosed;
     [contentView removeFromSuperview];
     [[[[UIApplication sharedApplication] delegate] window] makeKeyWindow];
     [window removeFromSuperview];
