@@ -10,8 +10,8 @@
 #import <UIKit/UIKit.h>
 #import "BAlertConfig.h"
 
-#define VMSCW [UIScreen mainScreen].bounds.size.width
-#define VMSCH [UIScreen mainScreen].bounds.size.height
+//#define VMSCW [UIScreen mainScreen].bounds.size.width
+//#define VMSCH [UIScreen mainScreen].bounds.size.height
 
 typedef NS_ENUM(NSInteger,BAlertViewAnimateType){
     BAlertViewAnimateCenter,
@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger,BAlertViewAnimateType){
 @implementation BAlerterViewController
 -(void)viewDidLoad{
     
-     _backBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, VMSCW, VMSCH)];
+     _backBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, MSCW, MSCH)];
     [_backBtn addTarget:self action:@selector(dimiss) forControlEvents:UIControlEventTouchUpInside];
     
    
@@ -172,7 +172,7 @@ static BToastLable *toastView = nil;
     }else if (style == BAlertModalToastCenter){
         frame  = CGRectMake((MSCW-width)/2,(MSCH-height)/2, width, height);
     }else{
-        frame  = CGRectMake((MSCW-width)/2,MSCH*0.85, width, height);
+        frame  = CGRectMake((MSCW-width)/2,MSCH*0.90-height, width, height);
     }
     toastView.alpha = 1;
     toastView.text = message;
@@ -304,15 +304,15 @@ static BToastLable *toastView = nil;
         {
             
             CGRect newRct =     contentView.frame ;
-            newRct.size.width = VMSCW;
+            newRct.size.width = MSCW;
             newRct.origin.x = 0;
-            newRct.origin.y = VMSCH; //开始的时候在屏幕下方
+            newRct.origin.y = MSCH; //开始的时候在屏幕下方
             contentView.frame = newRct;
             
             contentView.alpha = 0.1f;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = contentView.frame ;
-                newRct.origin.y = VMSCH-newRct.size.height;
+                newRct.origin.y = MSCH-newRct.size.height;
                 contentView.frame = newRct;
                 contentView.alpha = 1.0f;
             }];
@@ -398,7 +398,7 @@ static BToastLable *toastView = nil;
             contentView.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = contentView.frame ;
-                newRct.origin.y = VMSCH;
+                newRct.origin.y = MSCH;
                 contentView.frame = newRct;
                 contentView.alpha = 0.8f;
             } completion:^(BOOL finished) {
