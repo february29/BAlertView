@@ -16,7 +16,8 @@
 typedef NS_ENUM(NSInteger,BAlertViewAnimateType){
     BAlertViewAnimateCenter,
     BAlertViewAnimateBottom,
-    BAlertViewAnimateDropList
+    BAlertViewAnimateDropList,
+    BAlertViewAnimateLeftMove
     
 };
 
@@ -53,6 +54,9 @@ typedef NS_ENUM(NSInteger,BAlertViewAnimateType){
 - (BOOL)prefersStatusBarHidden
 {
     return BAlertViewAPPStatusBarHidden; // 返回NO表示要显示，返回YES将hiden
+}
+- (UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
 }
 -(void)setBackgroundColor:(UIColor *)backgroundColor{
     
@@ -153,6 +157,7 @@ static BToastLable *toastView = nil;
     }
     if (toastView.superview != [UIApplication sharedApplication].keyWindow) {
         [toastView removeFromSuperview];
+        [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
         [[UIApplication sharedApplication].keyWindow addSubview:toastView];
     }
     
@@ -221,20 +226,31 @@ static BToastLable *toastView = nil;
 }
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated{
   
+    [self showAlerView:view disPlayStyle:style animated:animated completionBlock:nil];
+}
+
+
+-(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)())completion{
+    if (!window) {
+        window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        window.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        window.opaque = NO;
+        
+        
+    }
     
-    window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    window.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    window.opaque = NO;
-    
-    BAlerterViewController *contentViewController = [[BAlerterViewController alloc] init];
-    window.rootViewController = contentViewController;
-    viewController = contentViewController;
-    viewController.backgroundColor = _backgroundColor?_backgroundColor:BAlertViewBackGroundColor;
-    viewController.shouldTapOutSideClosed = _shouldTapOutSideClosed;
-    [viewController.view addSubview:view];
+    if (!viewController) {
+        viewController = [[BAlerterViewController alloc] init];;
+        viewController.backgroundColor = _backgroundColor?_backgroundColor:BAlertViewBackGroundColor;
+        viewController.shouldTapOutSideClosed = _shouldTapOutSideClosed;
+    }
+    window.rootViewController = viewController;
     
     contentView = view;
+    [viewController.view addSubview:contentView];
     
+    
+    contentView.hidden = YES;
     viewDisPlayStyle = style;
     switch (viewDisPlayStyle) {
         case BAlertModalViewNone :
@@ -243,20 +259,23 @@ static BToastLable *toastView = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [window makeKeyAndVisible];
                 if(animated){
-                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateCenter];
+                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateCenter completionBlock:completion];
                 }
+                contentView.hidden = NO;
             });
-
+            
             break;
         }
         case BAlertModalViewBottom :
         {
-           
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [window makeKeyAndVisible];
+                
                 if(animated){
-                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateBottom];
+                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateBottom completionBlock:completion];
                 }
+                contentView.hidden = NO;
             });
             break;
         }
@@ -267,10 +286,11 @@ static BToastLable *toastView = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [window makeKeyAndVisible];
                 if(animated){
-                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateCenter];
+                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateCenter completionBlock:completion];
                 }
+                contentView.hidden = NO;
             });
-
+            
             
             break;
             
@@ -280,25 +300,39 @@ static BToastLable *toastView = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [window makeKeyAndVisible];
                 if(animated){
-                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateDropList];
+                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateDropList completionBlock:completion];
                 }
+                contentView.hidden = NO;
             });
-
+            
             break;
         }
+            
+        case BAlertModalViewLeftMove:
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [window makeKeyAndVisible];
+                if(animated){
+                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateLeftMove completionBlock:completion];
+                }
+                contentView.hidden = NO;
+            });
+            
+            break;
+        }
+            
             
         default:
             break;
     }
-
     
-   
+    
+    
 
 }
 
 
-
--(void)viewShowAnimateWithAnimateType:(BAlertViewAnimateType)animateType {
+-(void)viewShowAnimateWithAnimateType:(BAlertViewAnimateType)animateType completionBlock:(void(^)())completion{
     switch (animateType) {
         case BAlertViewAnimateBottom:
         {
@@ -310,39 +344,50 @@ static BToastLable *toastView = nil;
             contentView.frame = newRct;
             
             contentView.alpha = 0.1f;
+            contentView.hidden = NO;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = contentView.frame ;
                 newRct.origin.y = MSCH-newRct.size.height;
                 contentView.frame = newRct;
                 contentView.alpha = 1.0f;
+                
+                if (completion) {
+                    completion();
+                }
+                
             }];
-
             
-           break;
+            
+            break;
         }
         case BAlertViewAnimateCenter:
         {
-            
+            contentView.hidden = NO;
             contentView.alpha = 0;
             contentView.layer.shouldRasterize = YES;
             contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 contentView.alpha = 1;
-                contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
+                contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     contentView.alpha = 1;
                     contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
                 } completion:^(BOOL finished2) {
                     contentView.layer.shouldRasterize = NO;
+                    if (completion) {
+                        completion();
+                    }
+
                     
                 }];
             }];
-
+            
             break;
         }
         case BAlertViewAnimateDropList:
         {
+            contentView.hidden = NO;
             float tableH = contentView.frame.size.height;
             contentView.alpha = 0.0f;
             CGRect frame = contentView.frame;
@@ -355,14 +400,51 @@ static BToastLable *toastView = nil;
             contentView.frame = frame;
             contentView.alpha = 1;
             [UIView commitAnimations];
+            if (completion) {
+                completion();
+            }
+
             
             break;
         }
-    
+        case BAlertViewAnimateLeftMove:
+        {
+            contentView.hidden = NO;
+            contentView.alpha = 0;
+            
+            
+            contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -contentView.frame.size.width, 0);
+            
+            
+            
+            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                contentView.alpha = 1;
+                contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
+            } completion:^(BOOL finished) {
+                contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
+                if (completion) {
+                    completion();
+                }
+
+            }];
+            
+            
+            
+            break;
+        }
+            
+            
             
         default:
             break;
     }
+
+}
+
+
+-(void)viewShowAnimateWithAnimateType:(BAlertViewAnimateType)animateType {
+   
+    [self viewShowAnimateWithAnimateType:animateType completionBlock:nil];
 }
 
 - (void)hide{
@@ -379,14 +461,21 @@ static BToastLable *toastView = nil;
 
 - (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)())completion{
    
+    [self hideAnimated:animated hideWindow:YES withCompletionBlock:completion];
+    
+    
+}
+
+
+- (void)hideAnimated:(BOOL)animated hideWindow:(BOOL )hiddeWindow withCompletionBlock:(void(^)())completion{
     
     if(!animated){
-        [self cleanup];
+        [self cleanup:hiddeWindow];
         return;
     }
     
     switch (viewDisPlayStyle) {
-       
+            
         case BAlertModalViewBottom :
         {
             
@@ -394,7 +483,7 @@ static BToastLable *toastView = nil;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 viewController.backBtn.alpha = 0;
             }];
-
+            
             contentView.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = contentView.frame ;
@@ -403,13 +492,13 @@ static BToastLable *toastView = nil;
                 contentView.alpha = 0.8f;
             } completion:^(BOOL finished) {
                 [contentView removeFromSuperview];
-                [self cleanup];
+                [self cleanup:hiddeWindow];
                 
                 if(completion){
                     completion();
                 }
             }];
-
+            
             break;
         }
         case BAlertModalViewDropList:
@@ -418,40 +507,70 @@ static BToastLable *toastView = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 
-                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                    viewController.backBtn.alpha = 0;
-                }];
+//                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+//                    viewController.backBtn.alpha = 0;
+//                }];
                 
                 contentView.layer.shouldRasterize = YES;
                 
                 [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                        contentView.alpha = 0;
-                        //contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
+                    contentView.alpha = 0;
+                    //contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
                     
                     
                 } completion:^(BOOL finished2){
-                        [self cleanup];
-                        if(completion){
-                            completion();
-                        }
-                        
+                    [self cleanup:hiddeWindow];
+                    if(completion){
+                        completion();
+                    }
+                    
                     
                 }];
                 
             });
-
             
-//            [UIView animateWithDuration:0.35f animations:^{
-//               
-//                CGRect sf = self.frame;
-//                sf.size.height = 30;
-//                self.frame = sf;
-//                CGRect frame = tv.frame;
-//                frame.size.height = 0;
-//                tv.frame = frame;
-//                
-//            }];
-
+            
+            //            [UIView animateWithDuration:0.35f animations:^{
+            //
+            //                CGRect sf = self.frame;
+            //                sf.size.height = 30;
+            //                self.frame = sf;
+            //                CGRect frame = tv.frame;
+            //                frame.size.height = 0;
+            //                tv.frame = frame;
+            //
+            //            }];
+            
+            break;
+        }
+            
+        case BAlertModalViewLeftMove:{
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                
+                
+                contentView.alpha = 1;
+                contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
+                
+                
+                
+                
+                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                    contentView.alpha = 0;
+                    contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -contentView.frame.size.width, 0);
+                } completion:^(BOOL finished) {
+                    
+                    [self cleanup:hiddeWindow];
+                    if(completion){
+                        completion();
+                    }
+                    
+                }];
+                
+            });
+            
+            
             break;
         }
             
@@ -466,13 +585,13 @@ static BToastLable *toastView = nil;
                 
                 contentView.layer.shouldRasterize = YES;
                 [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                    contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
+                    contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
                 } completion:^(BOOL finished){
                     [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                         contentView.alpha = 0;
                         contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
                     } completion:^(BOOL finished2){
-                        [self cleanup];
+                        [self cleanup:hiddeWindow];
                         if(completion){
                             completion();
                         }
@@ -480,26 +599,46 @@ static BToastLable *toastView = nil;
                     }];
                 }];
             });
-
-             break;
+            
+            break;
         }
-           
+            
     }
-    
+
     
 }
 
 
 - (void)cleanup{
+    [self cleanup:YES];
+}
+
+- (void)cleanup:(BOOL )hideWindow{
     
-    //还原为默认
-    self.backgroundColor = BAlertViewBackGroundColor;
-    self.shouldTapOutSideClosed = BAlertViewShouldTapOutsideClosed;
+    
+
+    
     [contentView removeFromSuperview];
-    [[[[UIApplication sharedApplication] delegate] window] makeKeyWindow];
-    [window removeFromSuperview];
-    viewController = nil;
-    window = nil;
+   
+    
+    if (hideWindow) {
+        
+        
+        [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+       
+       
+        viewController = nil;
+        [window removeFromSuperview];
+        window = nil;
+        self.backgroundColor = BAlertViewBackGroundColor;
+        self.shouldTapOutSideClosed = BAlertViewShouldTapOutsideClosed;
+    }else{
+        //还原为默认
+        self.backgroundColor = BAlertViewBackGroundColor;
+        self.shouldTapOutSideClosed = BAlertViewShouldTapOutsideClosed;
+    }
+    
+    
 }
 
 

@@ -20,7 +20,8 @@ typedef NS_ENUM(NSInteger,BAlertModalViewDisPlayStyle){
     BAlertModalViewNone,// 位置根据传入的view frame决定
     BAlertModalViewCenter,//默认中间 宽高自定
     BAlertModalViewBottom ,//底部 view宽度与屏幕等宽，高度自定
-    BAlertModalViewDropList //下拉样式显示
+    BAlertModalViewDropList, //下拉样式显示
+    BAlertModalViewLeftMove//从左侧移动过来
    
     
 };
@@ -59,10 +60,17 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
 -(void)showAlerView:(UIView *)view  animated:(BOOL)animated;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated;
+-(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)())completion;
 
+
+//隐藏后 还原keywindow
 - (void)hide;
 - (void)hideWithCompletionBlock:(void(^)())completion;
 - (void)hideAnimated:(BOOL)animated;
 - (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)())completion;
+
+
+//隐藏后 不还原keywindow  只是让contentviewer 消失  不常用
+- (void)hideAnimated:(BOOL)animated hideWindow:(BOOL )hiddeWindow withCompletionBlock:(void(^)())completion;
 
 @end
