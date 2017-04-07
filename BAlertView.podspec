@@ -1,12 +1,12 @@
-Pod::Spec.new do |s|
-    s.name         = 'BAlertView'
-    s.version      = ‘1.0.7’
-    s.summary      = '1.show a toast 2.modle show a customview'
-    s.homepage     = 'https://github.com/february29/BAlertView'
-    s.license      = 'MIT'
-    s.authors      = {'february29' => 'pengyou_byh@163.com'}
-    s.platform     = :ios, '7.0'
-    s.source       = {:git => 'https://github.com/february29/BAlertView.git', :tag => s.version}
-    s.source_files = 'BAlertView/*.{h,m}'
-    s.requires_arc = true
+Pod::Spec.new do |spec|
+    spec.name         = 'BAlertView'
+    spec.version      = '1.0.7'
+    spec.summary      = '1.show a toast 2.modle show a customview'
+    spec.homepage     = 'https://github.com/february29/BAlertView'
+    spec.license      = 'MIT'
+    spec.authors      = {'february29' => 'pengyou_byh@163.com'}
+    spec.platform     = :ios, '7.0'
+    spec.source       = {:git => 'https://github.com/february29/BAlertView.git', :tag => spec.version}
+    spec.source_files = 'BAlertView/*.{h,m}'
+    spec.requires_arc = true
 end
