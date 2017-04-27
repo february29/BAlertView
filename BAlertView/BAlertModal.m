@@ -479,10 +479,12 @@ static BToastLable *toastView = nil;
         case BAlertModalViewBottom :
         {
             
-            
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                viewController.backBtn.alpha = 0;
-            }];
+            if (hiddeWindow) {
+                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                    viewController.backBtn.alpha = 0;
+                }];
+
+            }
             
             contentView.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
@@ -506,10 +508,12 @@ static BToastLable *toastView = nil;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                
-//                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-//                    viewController.backBtn.alpha = 0;
-//                }];
+                if (hiddeWindow) {
+                    [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                        viewController.backBtn.alpha = 0;
+                    }];
+ 
+                }
                 
                 contentView.layer.shouldRasterize = YES;
                 
@@ -548,7 +552,12 @@ static BToastLable *toastView = nil;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                
+                if (hiddeWindow) {
+                    [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                        viewController.backBtn.alpha = 0;
+                    }];
+                    
+                }
                 
                 contentView.alpha = 1;
                 contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
@@ -579,9 +588,13 @@ static BToastLable *toastView = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 
-                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                    viewController.backBtn.alpha = 0;
-                }];
+                if (hiddeWindow) {
+                    [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                        viewController.backBtn.alpha = 0;
+                    }];
+                    
+                }
+
                 
                 contentView.layer.shouldRasterize = YES;
                 [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
