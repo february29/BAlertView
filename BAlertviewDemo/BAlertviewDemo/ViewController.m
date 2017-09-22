@@ -103,6 +103,7 @@
         case 1:
         {
             //center
+            
            
             [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewCenter];
             // [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
@@ -126,20 +127,45 @@
         case 4:
         {
             //none
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewLeftMove];
+//            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewLeftMove];
+            
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"er" message:@"fd" preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *canleac = [UIAlertAction actionWithTitle:@"cancle" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            
+            UIAlertAction *okac = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            [alert addAction:canleac];
+            [alert addAction:okac];
+//            [self presentViewController:alert animated:YES completion:^{
+//                
+//            }];
+            [self .navigationController pushViewController:alert animated:YES];
             break;
 
         }
         case 5:
         {
             //none
-            UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
-            CGRect rect=[sender convertRect: sender.bounds toView:window];
+//            UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
+//            CGRect rect=[sender convertRect: sender.bounds toView:window];
+//
+//            view.frame = CGRectMake(rect.origin.x, rect.origin.y+rect.size.height+1, rect.size.width,view.frame.size.height);
+//
+//            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewDropList];
+           
+            
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"fd" message:@"df" delegate:nil cancelButtonTitle:@"cnalse" otherButtonTitles:@"ok", nil];
+            [alert show];
 
-            view.frame = CGRectMake(rect.origin.x, rect.origin.y+rect.size.height+1, rect.size.width,view.frame.size.height);
-
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewDropList];
+            
             break;
+            
+            
             
         }
 

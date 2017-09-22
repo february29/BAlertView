@@ -187,6 +187,7 @@ static BToastLable *toastView = nil;
     [UIView animateWithDuration:time animations:^{
         toastView.alpha = 0;
     } completion:^(BOOL finished) {
+        [toastView removeFromSuperview];
     }];
 
 }
