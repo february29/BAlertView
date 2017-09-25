@@ -8,6 +8,15 @@ BAlertView 主要提供两种功能
 
 ----------
 
+<div align=center>
+ <img src="toast.gif" width = "375" height = "689" alt="图片名称" align=center />
+ 
+<img src="alertview.gif" width = "375" height = "689" alt="图片名称" align=center />
+
+</div>
+
+----------------
+
 cocoapods
 -------------
 ```
