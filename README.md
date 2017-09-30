@@ -34,7 +34,7 @@ pod 'BAlertView', '~> 1.0.7'
 使用方法
 ```
 //常规用法
-[[BAlertModal sharedInstance]makeToast:@"hello world"];
+[[BAlertModal sharedInstance]makeToast:@"hellow world"];
 //宏定义用法
 BMAKECENTERTOAST(@"DAFDFASDFASDFA");
 ```
