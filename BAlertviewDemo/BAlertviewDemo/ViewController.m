@@ -63,8 +63,15 @@
     buttom6.tag = 5;
     [buttom6 addTarget:self action:@selector(showView:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttom6];
+    /** 将状态栏文本颜色设置为白色 */
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    /** 将状态栏文本颜色设置为黑色 ,默认就是黑色 */
+//    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    
+  
     
 }
+
 
 
 
@@ -72,7 +79,7 @@
 -(void)showToast{
     
     //普通用法
-    [[BAlertModal sharedInstance]makeToast:@"he000来了解了解了空间里看见了结局；将；据了解了空间里你呢，nlknjkhljljljkljljl，就离开就离开就离开离开了；看；离开；离开；看；看；离开；看；离开；据了解看了解了好了会后悔 i 哦哦哦就哦就了解了弄就啵啵ipjpjphnphphni 哦就哦 i00003"];
+    [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！"];
     
   // [[BAlertModal sharedInstance]makeToast:@"he000"];
     
@@ -112,7 +119,7 @@
         case 2:
         {
             //bottom
-           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
+//           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
             [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewBottom];
             //[[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
             break;

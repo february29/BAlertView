@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		217606E11D0CF816003C455E /* BAlertModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 217606E01D0CF816003C455E /* BAlertModal.m */; settings = {ASSET_TAGS = (); }; };
+		217606E11D0CF816003C455E /* BAlertModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 217606E01D0CF816003C455E /* BAlertModal.m */; };
 		21D251611CE2DB7900E8C1E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251601CE2DB7900E8C1E5 /* main.m */; };
 		21D251641CE2DB7900E8C1E5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251631CE2DB7900E8C1E5 /* AppDelegate.m */; };
 		21D251671CE2DB7900E8C1E5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251661CE2DB7900E8C1E5 /* ViewController.m */; };
