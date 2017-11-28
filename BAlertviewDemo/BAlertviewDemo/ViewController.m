@@ -120,7 +120,7 @@
         {
             //bottom
 //           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewBottom];
+            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewBottom2];
             //[[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
             break;
         }

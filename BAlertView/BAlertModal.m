@@ -16,6 +16,7 @@
 typedef NS_ENUM(NSInteger,BAlertViewAnimateType){
     BAlertViewAnimateCenter,
     BAlertViewAnimateBottom,
+    BAlertViewAnimateBottom2,
     BAlertViewAnimateDropList,
     BAlertViewAnimateLeftMove
     
@@ -285,6 +286,20 @@ static BToastLable *toastView = nil;
             });
             break;
         }
+        case BAlertModalViewBottom2 :
+        {
+            
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [window makeKeyAndVisible];
+                
+                if(animated){
+                    [self viewShowAnimateWithAnimateType:BAlertViewAnimateBottom2 completionBlock:completion];
+                }
+                contentView.hidden = NO;
+            });
+            break;
+        }
         case BAlertModalViewCenter :
         {
             
@@ -340,24 +355,25 @@ static BToastLable *toastView = nil;
 
 -(void)viewShowAnimateWithAnimateType:(BAlertViewAnimateType)animateType completionBlock:(void(^)())completion{
     switch (animateType) {
+        case BAlertViewAnimateBottom2:
+        {
+            delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+               delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
+            }];
+            
+        }
         case BAlertViewAnimateBottom:
         {
-            
-            
             
             CGRect newRct =     contentView.frame ;
             newRct.size.width = MSCW;
             newRct.origin.x = 0;
             newRct.origin.y = MSCH; //开始的时候在屏幕下方
             contentView.frame = newRct;
-            
             contentView.alpha = 0.1f;
             contentView.hidden = NO;
             
-            delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-               delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
-            }];
             
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = contentView.frame ;
@@ -490,6 +506,16 @@ static BToastLable *toastView = nil;
     
     switch (viewDisPlayStyle) {
             
+        case BAlertModalViewBottom2 :
+        {
+            
+           
+            delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
+            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+            }];
+
+        }
         case BAlertModalViewBottom :
         {
             
@@ -498,14 +524,10 @@ static BToastLable *toastView = nil;
                 [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                     viewController.backBtn.alpha = 0;
                 }];
-
+                
             }
             
-            delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-            }];
-
+            
             
             contentView.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{

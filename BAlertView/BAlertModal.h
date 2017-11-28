@@ -19,12 +19,15 @@
 typedef NS_ENUM(NSInteger,BAlertModalViewDisPlayStyle){
     BAlertModalViewNone,// 位置根据传入的view frame决定
     BAlertModalViewCenter,//默认中间 宽高自定
-    BAlertModalViewBottom ,//底部 view宽度与屏幕等宽，高度自定
+    BAlertModalViewBottom ,//底部 view宽度与屏幕等宽，高度自定 window不缩小
+    BAlertModalViewBottom2,//底部 window 缩小
     BAlertModalViewDropList, //下拉样式显示
     BAlertModalViewLeftMove//从左侧移动过来
    
     
 };
+
+
 
 typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayStyle){
     BAlertModalToastTop,
