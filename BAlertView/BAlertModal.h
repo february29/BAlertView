@@ -21,8 +21,12 @@ typedef NS_ENUM(NSInteger,BAlertModalViewDisPlayStyle){
     BAlertModalViewCenter,//默认中间 宽高自定
     BAlertModalViewBottom ,//底部 view宽度与屏幕等宽，高度自定 window不缩小
     BAlertModalViewBottom2,//底部 window 缩小
+    BAlertModalViewLeftMove,//从左侧移动过来
+    BAlertModalViewLeftMove2,//从左侧移动过来 keyWindow跟随移动
+    BAlertModalViewRightMove,//从右侧移动过来
+    BAlertModalViewRightMove2,//从右侧移动过来 keyWindow跟随移动
     BAlertModalViewDropList, //下拉样式显示
-    BAlertModalViewLeftMove//从左侧移动过来
+    BAlertViewAnimateCustom // 自定义 尚需完善
    
     
 };
@@ -42,6 +46,19 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
    
     
 };
+
+@interface BToastLable : UILabel
+
+@end
+
+@interface BAlerterViewController : UIViewController
+
+@property(nonatomic,readwrite,retain)UIColor *backgroundColor;
+@property(nonatomic)BOOL shouldTapOutSideClosed;
+@property(nonatomic,readwrite,retain) UIButton *backBtn;
+
+@end
+
 
 @interface BAlertModal : NSObject
 
@@ -63,17 +80,17 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
 -(void)showAlerView:(UIView *)view  animated:(BOOL)animated;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated;
--(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)())completion;
+-(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)(void))completion;
 
 
 //隐藏后 还原keywindow
 - (void)hide;
-- (void)hideWithCompletionBlock:(void(^)())completion;
+- (void)hideWithCompletionBlock:(void(^)(void))completion;
 - (void)hideAnimated:(BOOL)animated;
-- (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)())completion;
+- (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)(void))completion;
 
 
 //隐藏后 不还原keywindow  只是让contentviewer 消失  不常用
-- (void)hideAnimated:(BOOL)animated hideWindow:(BOOL )hiddeWindow withCompletionBlock:(void(^)())completion;
+- (void)hideAnimated:(BOOL)animated hideWindow:(BOOL )hiddeWindow withCompletionBlock:(void(^)(void))completion;
 
 @end

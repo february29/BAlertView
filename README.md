@@ -21,7 +21,7 @@ BAlertView 主要提供两种功能
 cocoapods
 -------------
 ```
-pod 'BAlertView', '~> 1.0.7'
+pod 'BAlertView'
 ```
 使用方法
 -------------

@@ -134,7 +134,7 @@
         case 4:
         {
             //none
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewLeftMove];
+            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewRightMove2];
             
             
            
