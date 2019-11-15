@@ -178,8 +178,14 @@
 
 -(void)secondShow{
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 300)];
+    UITapGestureRecognizer *tap2= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideall)];
+    [view addGestureRecognizer:tap2];
     view.backgroundColor = [UIColor purpleColor];
-    [[BAlertModal sharedInstance]showAlerView:view];
+    [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewBottom animated:YES];
+}
+
+-(void)hideall{
+    [[BAlertModal sharedInstance] hideAll];
 }
 
 

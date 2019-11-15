@@ -463,7 +463,6 @@ static BToastLable *toastView = nil;
     
     __weak typeof(self) wkself = self;
     
-    
     //如果_showViewInfoArray只有1个，证明这是最后一个 背景做动画
     if ( animated && _showViewInfoArray.count <= 1 ) {
         wkself.viewController.backBtn.alpha = 1;
@@ -640,10 +639,16 @@ static BToastLable *toastView = nil;
             
     }
     
-    
-    
+}
 
-    
+
+- (void)hideAll{
+    for (int i = 0; i<self.showViewInfoArray.count; i++) {
+        [self hide];
+    }
+//    for (int i = 0 ) {
+//        [self hide];
+//    }
 }
 
 //MARK: -  clean
