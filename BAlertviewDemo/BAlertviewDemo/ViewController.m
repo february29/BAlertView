@@ -102,6 +102,8 @@
    
     
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
+    UITapGestureRecognizer *tap= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(secondShow)];
+    [view addGestureRecognizer:tap];
     [view setBackgroundColor:[UIColor yellowColor]];
 
     
@@ -134,7 +136,7 @@
         case 4:
         {
             //none
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewRightMove2];
+            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewLeftMove];
             
             
            
@@ -159,6 +161,7 @@
             
             
         }
+        
 
             
         default:
@@ -171,6 +174,12 @@
     
     
     
+}
+
+-(void)secondShow{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 300)];
+    view.backgroundColor = [UIColor purpleColor];
+    [[BAlertModal sharedInstance]showAlerView:view];
 }
 
 

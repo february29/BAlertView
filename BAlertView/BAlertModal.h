@@ -88,9 +88,13 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
 - (void)hideWithCompletionBlock:(void(^)(void))completion;
 - (void)hideAnimated:(BOOL)animated;
 - (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)(void))completion;
-
-
 //隐藏后 不还原keywindow  只是让contentviewer 消失  不常用
-- (void)hideAnimated:(BOOL)animated hideWindow:(BOOL )hiddeWindow withCompletionBlock:(void(^)(void))completion;
+//- (void)hideAnimated:(BOOL)animated hideWindow:(BOOL )hiddeWindow withCompletionBlock:(void(^)(void))completion;
+
+//如果出现二次弹窗时 隐藏所有的弹窗
+- (void)hideAll;
+
+
+
 
 @end
