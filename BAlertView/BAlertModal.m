@@ -9,10 +9,10 @@
 #import "BAlertModal.h"
 #import <UIKit/UIKit.h>
 #import "BAlertConfig.h"
+#import "UIView+BAlertModel.h"
 
-
-NSString *const bAlertModelViewKey = @"bAlertModelViewKey";
-NSString *const bAlertModelDisplayStyleKey = @"bAlertModelDisplayStyleKey";
+//NSString *const bAlertModelViewKey = @"bAlertModelViewKey";
+//NSString *const bAlertModelDisplayStyleKey = @"bAlertModelDisplayStyleKey";
 
 
 //==============tostlable================
@@ -74,8 +74,8 @@ static BToastLable *toastView = nil;
 @property (nonatomic,strong) UIWindow *window;
 @property (nonatomic,strong) BAlerterViewController *viewController;
 @property (nonatomic,strong) UIView *contentView;
-//记录显示的view 和view的显示方式 {@"view":}
-@property (nonatomic,strong) NSMutableArray *showViewInfoArray;
+//记录显示的view
+@property (nonatomic,strong) NSMutableArray *showViewArray;
 @property (nonatomic,assign) BAlertModalViewDisPlayStyle viewDisPlayStyle;
 
 @property (nonatomic,strong) UIWindow *delegateWindow;
@@ -100,7 +100,7 @@ static BToastLable *toastView = nil;
     self = [super init];
     if (self) {
         self.shouldTapOutSideClosed = YES;
-        _showViewInfoArray = [NSMutableArray new];
+        _showViewArray = [NSMutableArray new];
         _delegateWindow =  [[[UIApplication sharedApplication] delegate] window];
     }
     return self;
@@ -245,7 +245,7 @@ static BToastLable *toastView = nil;
     [_viewController.view addSubview:_contentView];
     
     //_showViewInfoArray  有内容证明 已经显示了 此时为二次弹窗 不需要动画
-    if (animated && _showViewInfoArray.count == 0 ) {
+    if (animated && _showViewArray.count == 0 ) {
         wkself.viewController.backBtn.alpha = 0;
         [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
            wkself.viewController.backBtn.alpha = 1;
@@ -253,7 +253,9 @@ static BToastLable *toastView = nil;
     }
        
     
-    [_showViewInfoArray addObject:@{bAlertModelViewKey:view,bAlertModelDisplayStyleKey:@(style)}];
+    view.b_showStyle = style;
+    view.b_hideStyle = style;
+    [_showViewArray addObject:view];
     
     _contentView.hidden = YES;
     _viewDisPlayStyle = style;
@@ -443,28 +445,28 @@ static BToastLable *toastView = nil;
 
 
 - (void)hide{
-    [self hideAnimated:YES  withCompletionBlock:nil];
+    [self hideView:[_showViewArray lastObject] animated:YES completionBlock:nil];
 }
 
 - (void)hideWithCompletionBlock:(void(^)(void))completion{
-    [self hideAnimated:YES withCompletionBlock:completion];
+    [self hideView:[_showViewArray lastObject] animated:YES completionBlock:completion];
 }
 
 - (void)hideAnimated:(BOOL)animated{
-    [self hideAnimated:animated  withCompletionBlock:nil];
+    [self hideView:[_showViewArray lastObject] animated:animated completionBlock:nil];
 }
 
-//- (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)(void))completion{
-//    [self hideAnimated:animated hideWindow:YES withCompletionBlock:completion];
-//}
+- (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)(void))completion{
+    [self hideView:[_showViewArray lastObject] animated:animated completionBlock:completion];
+}
 
 
-- (void)hideAnimated:(BOOL)animated  withCompletionBlock:(void(^)(void))completion{
+- (void)hideView:(UIView *)view animated:(BOOL)animated  completionBlock:(void(^)(void))completion{
     
     __weak typeof(self) wkself = self;
     
     //如果_showViewInfoArray只有1个，证明这是最后一个 背景做动画
-    if ( animated && _showViewInfoArray.count <= 1 ) {
+    if ( animated && _showViewArray.count <= 1 ) {
         wkself.viewController.backBtn.alpha = 1;
         [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
            wkself.viewController.backBtn.alpha = 0;
@@ -472,23 +474,16 @@ static BToastLable *toastView = nil;
     }
     
     
-    
-    
     if(!animated){
 //         wkself.viewController.backBtn.alpha = 0;
-        [wkself removeLastView];
+        [wkself removeView:view];;
         return;
     }
     
    
  
-    NSDictionary *lastViewInfo = [self.showViewInfoArray lastObject];
-    UIView *lastView = lastViewInfo[bAlertModelViewKey];
-    BAlertModalViewDisPlayStyle style = [lastViewInfo[bAlertModelDisplayStyleKey] integerValue];
+    BAlertModalViewDisPlayStyle style = view.b_hideStyle;
   
-                       
-                   
-    
     
     switch (style) {
             
@@ -505,14 +500,14 @@ static BToastLable *toastView = nil;
         case BAlertModalViewBottom :
         {
 
-            lastView.layer.shouldRasterize = YES;
+            view.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                CGRect newRct = lastView.frame ;
+                CGRect newRct = view.frame ;
                 newRct.origin.y = MSCH;
-                lastView.frame = newRct;
-                lastView.alpha = 0.8f;
+                view.frame = newRct;
+                view.alpha = 0.8f;
             } completion:^(BOOL finished) {
-                [wkself removeLastView];
+                [wkself removeView:view];
                 if(completion){
                     completion();
                 }
@@ -525,15 +520,13 @@ static BToastLable *toastView = nil;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                lastView.layer.shouldRasterize = YES;
+                view.layer.shouldRasterize = YES;
                 
                 [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    lastView.alpha = 0;
-                    //contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
-                    
-                    
+                    view.alpha = 0;
+         
                 } completion:^(BOOL finished2){
-                    [wkself removeLastView];
+                    [wkself removeView:view];
                     if(completion){
                         completion();
                     }
@@ -548,7 +541,7 @@ static BToastLable *toastView = nil;
         }
         case BAlertModalViewLeftMove2:{
             
-             wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, lastView.frame.size.width, 0);
+             wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, view.frame.size.width, 0);
              [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                  wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
              }];
@@ -558,14 +551,14 @@ static BToastLable *toastView = nil;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                lastView.alpha = 1;
-                lastView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
+                view.alpha = 1;
+                view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
      
                 [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                    lastView.alpha = 0;
-                    lastView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -lastView.frame.size.width, 0);
+                    view.alpha = 0;
+                    view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -view.frame.size.width, 0);
                 } completion:^(BOOL finished) {
-                    [wkself removeLastView];
+                    [wkself removeView:view];
                     if(completion){
                         completion();
                     }
@@ -579,7 +572,7 @@ static BToastLable *toastView = nil;
         }
         case BAlertModalViewRightMove2:{
             
-             wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -lastView.frame.size.width, 0);
+             wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -view.frame.size.width, 0);
              [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                  wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
              }];
@@ -590,16 +583,16 @@ static BToastLable *toastView = nil;
            dispatch_async(dispatch_get_main_queue(), ^{
                
                
-               lastView.alpha = 1;
-               lastView.transform = CGAffineTransformIdentity;
+               view.alpha = 1;
+               view.transform = CGAffineTransformIdentity;
 //               contentView.transform = CGAffineTransformMakeTranslation(-contentView.frame.size.width, 0);
     
                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                   lastView.alpha = 0;
-                   lastView.transform = CGAffineTransformMakeTranslation(lastView.frame.size.width, 0);
+                   view.alpha = 0;
+                   view.transform = CGAffineTransformMakeTranslation(view.frame.size.width, 0);
 //                   contentView.transform = CGAffineTransformIdentity;
                } completion:^(BOOL finished) {
-                   [wkself removeLastView];
+                   [wkself removeView:view];
                    if(completion){
                        completion();
                    }
@@ -617,15 +610,15 @@ static BToastLable *toastView = nil;
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                lastView.layer.shouldRasterize = YES;
+                view.layer.shouldRasterize = YES;
                 [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                    lastView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
+                    view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
                 } completion:^(BOOL finished){
                     [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                        lastView.alpha = 0;
-                        lastView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
+                        view.alpha = 0;
+                        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
                     } completion:^(BOOL finished2){
-                        [wkself removeLastView];
+                        [wkself removeView:view];
                         if(completion){
                             completion();
                         }
@@ -642,65 +635,47 @@ static BToastLable *toastView = nil;
 }
 
 
+
+
 - (void)hideAll{
-    for (int i = 0; i<self.showViewInfoArray.count; i++) {
-        [self hide];
+    
+//    while (_showViewArray.count>0) {
+//        <#statements#>
+//    }
+    for (UIView *itemView in _showViewArray) {
+        [self hideView:itemView animated:YES completionBlock:nil];
     }
-//    for (int i = 0 ) {
+    
+    
+//    for (int i = 0; i<_showViewArray.count; i++) {
 //        [self hide];
 //    }
+
 }
 
 //MARK: -  clean
 
--(void)removeLastView{
-    NSDictionary *lastViewInfo = [self.showViewInfoArray lastObject];
-    UIView *lastView = lastViewInfo[bAlertModelViewKey];
-    [lastView removeFromSuperview];
-    [self.showViewInfoArray removeLastObject];
+-(void)removeView:(UIView *)view{
     
-    if (self.showViewInfoArray.count > 0) {
-        [self cleanAndHideWindlow:NO];
-    }else{
-        [self cleanAndHideWindlow:YES];
+    
+    [view removeFromSuperview];
+    [_showViewArray removeObject:view];
+    
+    
+    if (_showViewArray.count < 1) {
+         [self clean];
     }
     
 }
 
-
-
-
-
-
-
-//- (void)clean{
-//    [self cleanAndHideWindlow:NO];
-//
-//}
-
-
-- (void)cleanAndHideWindlow:(BOOL )hideWindow{
+- (void)clean{
     
     __weak typeof(self) wkself = self;
    
-    
-   
-    
-    if (hideWindow) {
-        
-//        [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-//              wkself.viewController.backBtn.alpha = 0;
-//        } completion:^(BOOL finished) {
-              
-            [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
-            wkself.viewController = nil;
-            [wkself.window removeFromSuperview];
-            wkself.window = nil;
-//        }];
-        
-  
-        
-    }
+    [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
+    wkself.viewController = nil;
+    [wkself.window removeFromSuperview];
+    wkself.window = nil;
     
     //还原为默认
     self.backgroundColor = BAlertViewBackGroundColor;
