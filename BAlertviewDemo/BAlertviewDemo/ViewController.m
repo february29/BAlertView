@@ -11,13 +11,24 @@
 
 @interface ViewController ()
 
+@property (nonatomic,strong) UILabel *firstView;
+
+@property (nonatomic,strong) UILabel *secendView;
+
 @end
+
+
+
+
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    
+   
     
     UIButton *buttom  = [[UIButton alloc]initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 100, 200, 30)];
     [buttom setBackgroundColor:[UIColor greenColor]];
@@ -72,6 +83,39 @@
     
 }
 
+-(UILabel *)firstView{
+    if (!_firstView) {
+        _firstView = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
+        _firstView.userInteractionEnabled = YES;
+        _firstView.text = @"000000";
+        UITapGestureRecognizer *tap= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(secondShow)];
+        [_firstView addGestureRecognizer:tap];
+        [_firstView setBackgroundColor:[UIColor yellowColor]];
+           
+           
+    }
+    return _firstView;
+}
+
+-(UILabel *)secendView{
+    if (!_secendView) {
+
+        _secendView = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 300)];
+        _secendView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap2= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideAll)];
+        [_secendView addGestureRecognizer:tap2];
+        UITextField *tf = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 100, 50)];
+        tf.layer.borderColor = UIColor.greenColor.CGColor;
+        tf.layer.borderWidth = 1;
+        [_secendView addSubview:tf];
+    
+        _secendView.text = @"222222222222";
+        _secendView.backgroundColor = [UIColor purpleColor];
+    }
+    return _secendView;
+}
+
+
 
 
 
@@ -96,15 +140,12 @@
     
     
     
-    NSString *message =@"lajldjlajdk\neeeheeeee";
+//    NSString *message =@"lajldjlajdk\neeeheeeee";
     
     
    
     
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
-    UITapGestureRecognizer *tap= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(secondShow)];
-    [view addGestureRecognizer:tap];
-    [view setBackgroundColor:[UIColor yellowColor]];
+    
 
     
     int tag = (int)sender.tag;
@@ -114,29 +155,29 @@
             //center
             
            
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewCenter];
-            // [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewCenter];
+//             [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
             break;
         }
         case 2:
         {
             //bottom
 //           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewBottom2];
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewBottom2];
             //[[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
             break;
         }
         case 3:
         {
             //none
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewNone];
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewNone];
             break;
         }
             
         case 4:
         {
             //none
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewLeftMove];
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewLeftMove];
             
             
            
@@ -149,9 +190,9 @@
             UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
             CGRect rect=[sender convertRect: sender.bounds toView:window];
 
-            view.frame = CGRectMake(rect.origin.x, rect.origin.y+rect.size.height+1, rect.size.width,view.frame.size.height);
+            self.firstView.frame = CGRectMake(rect.origin.x, rect.origin.y+rect.size.height+1, rect.size.width,self.firstView.frame.size.height);
 
-            [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewDropList];
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewDropList];
            
             
            
@@ -176,15 +217,17 @@
     
 }
 
+
+
+
+
 -(void)secondShow{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 300)];
-    UITapGestureRecognizer *tap2= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideall)];
-    [view addGestureRecognizer:tap2];
-    view.backgroundColor = [UIColor purpleColor];
-    [[BAlertModal sharedInstance]showAlerView:view disPlayStyle:BAlertModalViewBottom animated:YES];
+    
+    [[BAlertModal sharedInstance]showAlerView:self.secendView disPlayStyle:BAlertModalViewBottom animated:YES];
+    [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
 }
 
--(void)hideall{
+-(void)hideAll{
     [[BAlertModal sharedInstance] hideAll];
 }
 

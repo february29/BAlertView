@@ -56,12 +56,26 @@
     
 }
 
+-(void)setShouldTapOutSideClosed:(BOOL)shouldTapOutSideClosed{
+    _shouldTapOutSideClosed = shouldTapOutSideClosed;
+    
+
+    _backBtn.userInteractionEnabled = shouldTapOutSideClosed;
+    
+}
+
+//取消编辑状态，alertView中带输入框时 如果设置shouldTapOutSideClosed 为no时可回收键盘
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    
+}
+
 
 -(void)dimiss{
     
-    if (self.shouldTapOutSideClosed) {
+//    if (self.shouldTapOutSideClosed) {
          [[BAlertModal sharedInstance] hide];
-    }
+//    }
    
 }
 @end
@@ -257,7 +271,7 @@ static BToastLable *toastView = nil;
     view.b_hideStyle = style;
     [_showViewArray addObject:view];
     
-    _contentView.hidden = YES;
+
     _viewDisPlayStyle = style;
     
     if (_viewDisPlayStyle == BAlertModalViewCenter) {
@@ -269,7 +283,6 @@ static BToastLable *toastView = nil;
         if(animated){
             [wkself viewShowAnimateWithAnimateType:style completionBlock:completion];
         }
-        wkself.contentView.hidden = NO;
     });
     
    
@@ -298,13 +311,12 @@ static BToastLable *toastView = nil;
         {
             
             CGRect newRct =     wkself.contentView.frame ;
-            newRct.size.width = MSCW;
+//            newRct.size.width = MSCW;
             newRct.origin.x = 0;
             newRct.origin.y = MSCH; //开始的时候在屏幕下方
+           
             wkself.contentView.frame = newRct;
-            wkself.contentView.alpha = 0.1f;
-            wkself.contentView.hidden = NO;
-            
+           
             
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = wkself.contentView.frame ;
@@ -312,10 +324,10 @@ static BToastLable *toastView = nil;
                 wkself.contentView.frame = newRct;
                 wkself.contentView.alpha = 1.0f;
                 
+            } completion:^(BOOL finished) {
                 if (completion) {
                     completion();
                 }
-                
             }];
             
             
@@ -331,39 +343,53 @@ static BToastLable *toastView = nil;
                 wkself.contentView.alpha = 1;
                 wkself.contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
             } completion:^(BOOL finished) {
-                [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    wkself.contentView.alpha = 1;
-                    wkself.contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-                } completion:^(BOOL finished2) {
-                    wkself.contentView.layer.shouldRasterize = NO;
-                    if (completion) {
-                        completion();
-                    }
-
-                    
-                }];
+                wkself.contentView.layer.shouldRasterize = NO;
+                if (completion) {
+                    completion();
+                }
             }];
             
             break;
         }
         case BAlertModalViewDropList:
         {
-            wkself.contentView.hidden = NO;
+//            wkself.contentView.hidden = NO;
+//            float tableH = wkself.contentView.frame.size.height;
+//            wkself.contentView.alpha = 0.0f;
+//
+//            CGRect frame = wkself.contentView.frame;
+//            frame.size.height = 0;
+//            wkself.contentView.frame = frame;
+//            frame.size.height = tableH;
+//
+//            [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+//            [UIView setAnimationCurve:UIViewAnimationCurveLinear];
+//            wkself.contentView.frame = frame;
+//            wkself.contentView.alpha = 1;
+//            [UIView commitAnimations];
+//
+//            if (completion) {
+//                completion();
+//            }
+            
+            
             float tableH = wkself.contentView.frame.size.height;
-            wkself.contentView.alpha = 0.0f;
-            CGRect frame = wkself.contentView.frame;
+            
+           __block CGRect frame = wkself.contentView.frame;
             frame.size.height = 0;
             wkself.contentView.frame = frame;
-            frame.size.height = tableH;
-            [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
-            [UIView setAnimationCurve:UIViewAnimationCurveLinear];
             
-            wkself.contentView.frame = frame;
-            wkself.contentView.alpha = 1;
-            [UIView commitAnimations];
-            if (completion) {
-                completion();
-            }
+            wkself.contentView.alpha = 0.0f;
+            
+            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                frame.size.height = tableH;
+                wkself.contentView.frame = frame;
+                wkself.contentView.alpha = 1;
+            } completion:^(BOOL finished) {
+                if (completion) {
+                    completion();
+                }
+            }];
 
             
             break;
@@ -387,7 +413,6 @@ static BToastLable *toastView = nil;
                 wkself.contentView.alpha = 1;
                 wkself.contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
             } completion:^(BOOL finished) {
-                wkself.contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
                 if (completion) {
                     completion();
                 }
@@ -456,7 +481,7 @@ static BToastLable *toastView = nil;
     [self hideView:[_showViewArray lastObject] animated:animated completionBlock:nil];
 }
 
-- (void)hideAnimated:(BOOL)animated withCompletionBlock:(void(^)(void))completion{
+- (void)hideAnimated:(BOOL)animated completionBlock:(void(^)(void))completion{
     [self hideView:[_showViewArray lastObject] animated:animated completionBlock:completion];
 }
 
@@ -500,7 +525,6 @@ static BToastLable *toastView = nil;
         case BAlertModalViewBottom :
         {
 
-            view.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = view.frame ;
                 newRct.origin.y = MSCH;
@@ -508,6 +532,7 @@ static BToastLable *toastView = nil;
                 view.alpha = 0.8f;
             } completion:^(BOOL finished) {
                 [wkself removeView:view];
+                view.alpha = 1.0f;
                 if(completion){
                     completion();
                 }
@@ -520,13 +545,29 @@ static BToastLable *toastView = nil;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                view.layer.shouldRasterize = YES;
+                
+                float tableH = wkself.contentView.frame.size.height;
+                           
+
+                __block CGRect frame = wkself.contentView.frame;
+//                frame.size.height = tableH;
+//                wkself.contentView.frame = frame;
+                
+                wkself.contentView.alpha = 1.0f;
                 
                 [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     view.alpha = 0;
+                   
+                    frame.size.height = 0;
+                    wkself.contentView.frame = frame;
+                    
          
                 } completion:^(BOOL finished2){
                     [wkself removeView:view];
+                    view.alpha = 1;
+                    frame.size.height = tableH;
+                    wkself.contentView.frame = frame;
+                    
                     if(completion){
                         completion();
                     }
@@ -559,6 +600,8 @@ static BToastLable *toastView = nil;
                     view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -view.frame.size.width, 0);
                 } completion:^(BOOL finished) {
                     [wkself removeView:view];
+                    view.alpha = 1;
+                    view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
                     if(completion){
                         completion();
                     }
@@ -593,6 +636,8 @@ static BToastLable *toastView = nil;
 //                   contentView.transform = CGAffineTransformIdentity;
                } completion:^(BOOL finished) {
                    [wkself removeView:view];
+                   view.transform = CGAffineTransformIdentity;
+                   view.alpha = 1;
                    if(completion){
                        completion();
                    }
@@ -604,6 +649,13 @@ static BToastLable *toastView = nil;
            
            break;
        
+        }
+        case BAlertModalViewNone:{
+            
+            //带完善 ，现背景消失无动画
+            [wkself removeView:view];
+            
+            break;
         }
             
         default:
@@ -619,6 +671,8 @@ static BToastLable *toastView = nil;
                         view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
                     } completion:^(BOOL finished2){
                         [wkself removeView:view];
+                        view.alpha = 1;
+                        view.transform = CGAffineTransformIdentity;
                         if(completion){
                             completion();
                         }
@@ -659,16 +713,17 @@ static BToastLable *toastView = nil;
     
     
     [view removeFromSuperview];
+    [self cleanView:view];
     [_showViewArray removeObject:view];
     
     
     if (_showViewArray.count < 1) {
-         [self clean];
+         [self cleanAlertModel];
     }
     
 }
 
-- (void)clean{
+- (void)cleanAlertModel{
     
     __weak typeof(self) wkself = self;
    
@@ -682,6 +737,10 @@ static BToastLable *toastView = nil;
     self.shouldTapOutSideClosed = BAlertViewShouldTapOutsideClosed;
     
     
+}
+
+-(void)cleanView:(UIView *)view{
+    //待完善。恢复view的初始状态
 }
 
 //MARK: -  private
