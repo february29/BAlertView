@@ -159,7 +159,7 @@ static BToastLable *toastView = nil;
     }
     if (toastView.superview != [UIApplication sharedApplication].keyWindow) {
         [toastView removeFromSuperview];
-        [_delegateWindow makeKeyAndVisible];
+//        [_delegateWindow makeKeyAndVisible];
         [[UIApplication sharedApplication].keyWindow addSubview:toastView];
     }
     
