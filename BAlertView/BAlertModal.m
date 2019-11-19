@@ -316,7 +316,8 @@ static BToastLable *toastView = nil;
             newRct.origin.y = MSCH; //开始的时候在屏幕下方
            
             wkself.contentView.frame = newRct;
-           
+    
+            wkself.contentView.layer.shouldRasterize = YES;
             
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = wkself.contentView.frame ;
@@ -325,6 +326,7 @@ static BToastLable *toastView = nil;
                 wkself.contentView.alpha = 1.0f;
                 
             } completion:^(BOOL finished) {
+                wkself.contentView.layer.shouldRasterize = NO;
                 if (completion) {
                     completion();
                 }
@@ -380,12 +382,14 @@ static BToastLable *toastView = nil;
             wkself.contentView.frame = frame;
             
             wkself.contentView.alpha = 0.0f;
+            wkself.contentView.layer.shouldRasterize = YES;
             
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 frame.size.height = tableH;
                 wkself.contentView.frame = frame;
                 wkself.contentView.alpha = 1;
             } completion:^(BOOL finished) {
+                wkself.contentView.layer.shouldRasterize = NO;
                 if (completion) {
                     completion();
                 }
@@ -409,10 +413,12 @@ static BToastLable *toastView = nil;
             
             wkself.contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -wkself.contentView.frame.size.width, 0);
             
+            wkself.contentView.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 wkself.contentView.alpha = 1;
                 wkself.contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
             } completion:^(BOOL finished) {
+                wkself.contentView.layer.shouldRasterize = NO;
                 if (completion) {
                     completion();
                 }
@@ -437,10 +443,13 @@ static BToastLable *toastView = nil;
             wkself.contentView.alpha = 0;
             
             wkself.contentView.transform = CGAffineTransformMakeTranslation(wkself.contentView.frame.size.width, 0);
+            
+            wkself.contentView.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 wkself.contentView.alpha = 1;
                 wkself.contentView.transform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
+                wkself.contentView.layer.shouldRasterize = NO;
                 
                 if (completion) {
                     completion();
@@ -525,12 +534,14 @@ static BToastLable *toastView = nil;
         case BAlertModalViewBottom :
         {
 
+            view.layer.shouldRasterize = YES;
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                 CGRect newRct = view.frame ;
                 newRct.origin.y = MSCH;
                 view.frame = newRct;
                 view.alpha = 0.8f;
             } completion:^(BOOL finished) {
+                view.layer.shouldRasterize = NO;
                 [wkself removeView:view];
                 view.alpha = 1.0f;
                 if(completion){
@@ -554,6 +565,7 @@ static BToastLable *toastView = nil;
 //                wkself.contentView.frame = frame;
                 
                 wkself.contentView.alpha = 1.0f;
+                view.layer.shouldRasterize = YES;
                 
                 [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     view.alpha = 0;
@@ -563,6 +575,7 @@ static BToastLable *toastView = nil;
                     
          
                 } completion:^(BOOL finished2){
+                    view.layer.shouldRasterize = NO;
                     [wkself removeView:view];
                     view.alpha = 1;
                     frame.size.height = tableH;
@@ -594,11 +607,14 @@ static BToastLable *toastView = nil;
                 
                 view.alpha = 1;
                 view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
+                
+                view.layer.shouldRasterize = YES;
      
                 [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
                     view.alpha = 0;
                     view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -view.frame.size.width, 0);
                 } completion:^(BOOL finished) {
+                    view.layer.shouldRasterize = NO;
                     [wkself removeView:view];
                     view.alpha = 1;
                     view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
@@ -628,6 +644,7 @@ static BToastLable *toastView = nil;
                
                view.alpha = 1;
                view.transform = CGAffineTransformIdentity;
+               view.layer.shouldRasterize = YES;
 //               contentView.transform = CGAffineTransformMakeTranslation(-contentView.frame.size.width, 0);
     
                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
@@ -635,6 +652,7 @@ static BToastLable *toastView = nil;
                    view.transform = CGAffineTransformMakeTranslation(view.frame.size.width, 0);
 //                   contentView.transform = CGAffineTransformIdentity;
                } completion:^(BOOL finished) {
+                   view.layer.shouldRasterize = NO;
                    [wkself removeView:view];
                    view.transform = CGAffineTransformIdentity;
                    view.alpha = 1;
@@ -670,6 +688,7 @@ static BToastLable *toastView = nil;
                         view.alpha = 0;
                         view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
                     } completion:^(BOOL finished2){
+                        view.layer.shouldRasterize = NO;
                         [wkself removeView:view];
                         view.alpha = 1;
                         view.transform = CGAffineTransformIdentity;
