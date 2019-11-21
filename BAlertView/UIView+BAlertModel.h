@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) BAlertModalViewDisPlayStyle b_showStyle;
 @property (nonatomic,assign) BAlertModalViewDisPlayStyle b_hideStyle;
 
+@property (nonatomic,copy) BAlertModelshowAnimationBlock b_showBlock;
+@property (nonatomic,copy) BAlertModelHideAnimationBlock b_hideBlock;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -16,6 +16,8 @@
 //#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+
+
 typedef NS_ENUM(NSInteger,BAlertModalViewDisPlayStyle){
     BAlertModalViewNone,// 位置根据传入的view frame决定
     BAlertModalViewCenter,//默认中间 宽高自定
@@ -46,6 +48,9 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
    
     
 };
+
+typedef void(^BAlertModelshowAnimationBlock)(UIView *view);
+typedef void(^BAlertModelHideAnimationBlock)(UIView *view);
 
 @interface BToastLable : UILabel
 
@@ -82,14 +87,14 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)(void))completion;
 
+-(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showBlock completionBlock:(void(^)(void))completion;
+
 
 //隐藏后 还原keywindow
 - (void)hide;
 - (void)hideWithCompletionBlock:(void(^)(void))completion;
 - (void)hideAnimated:(BOOL)animated;
 - (void)hideAnimated:(BOOL)animated completionBlock:(void(^)(void))completion;
-//隐藏后 不还原keywindow  只是让contentviewer 消失  不常用
-//- (void)hideAnimated:(BOOL)animated hideWindow:(BOOL )hiddeWindow withCompletionBlock:(void(^)(void))completion;
 
 //如果出现二次弹窗时 隐藏所有的弹窗 
 - (void)hideAll;

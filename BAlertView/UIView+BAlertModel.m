@@ -12,6 +12,8 @@
 
 NSString *const bShowStyleKey = @"bShowStyleKey";
 NSString *const bHideStyleKey = @"bHideStyleKey";
+NSString *const bShowBlockKey = @"bShowBlockKey";
+NSString *const bHideBlockKey = @"bHideBlockKey";
 
 @implementation UIView (BAlertModel)
 
@@ -35,6 +37,20 @@ NSString *const bHideStyleKey = @"bHideStyleKey";
     objc_setAssociatedObject(self, &bHideStyleKey, @(b_hideStyle), OBJC_ASSOCIATION_ASSIGN);
 }
 
+
+- (BAlertModelshowAnimationBlock)b_showBlock{
+    return objc_getAssociatedObject(self, &bShowBlockKey);
+}
+-(void)setB_showBlock:(BAlertModelshowAnimationBlock)b_showBlock{
+    objc_setAssociatedObject(self, &bShowBlockKey, b_showBlock, OBJC_ASSOCIATION_COPY);
+}
+
+- (BAlertModelHideAnimationBlock)b_hideBlock{
+    return objc_getAssociatedObject(self, &bHideBlockKey);
+}
+-(void)setB_hideBlock:(BAlertModelHideAnimationBlock)b_hideBlock{
+    objc_setAssociatedObject(self, &bHideBlockKey, b_hideBlock, OBJC_ASSOCIATION_COPY);
+}
 
 
 

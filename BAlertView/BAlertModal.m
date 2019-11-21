@@ -7,7 +7,6 @@
 //
 
 #import "BAlertModal.h"
-#import <UIKit/UIKit.h>
 #import "BAlertConfig.h"
 #import "UIView+BAlertModel.h"
 
@@ -90,7 +89,7 @@ static BToastLable *toastView = nil;
 @property (nonatomic,strong) UIView *contentView;
 //记录显示的view
 @property (nonatomic,strong) NSMutableArray *showViewArray;
-@property (nonatomic,assign) BAlertModalViewDisPlayStyle viewDisPlayStyle;
+
 
 @property (nonatomic,strong) UIWindow *delegateWindow;
 
@@ -271,10 +270,8 @@ static BToastLable *toastView = nil;
     view.b_hideStyle = style;
     [_showViewArray addObject:view];
     
-
-    _viewDisPlayStyle = style;
     
-    if (_viewDisPlayStyle == BAlertModalViewCenter) {
+    if (style == BAlertModalViewCenter) {
         _contentView.center = _viewController.view.center;
     }
     
@@ -288,10 +285,14 @@ static BToastLable *toastView = nil;
    
 }
 
--(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType {
-   
-    [self viewShowAnimateWithAnimateType:animateType completionBlock:nil];
+- (void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showBlock completionBlock:(void (^)(void))completion{
+    
 }
+
+//-(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType {
+//
+//    [self viewShowAnimateWithAnimateType:animateType completionBlock:nil];
+//}
 
 -(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType completionBlock:(void(^)(void))completion{
     
@@ -355,37 +356,20 @@ static BToastLable *toastView = nil;
         }
         case BAlertModalViewDropList:
         {
-//            wkself.contentView.hidden = NO;
-//            float tableH = wkself.contentView.frame.size.height;
-//            wkself.contentView.alpha = 0.0f;
-//
-//            CGRect frame = wkself.contentView.frame;
-//            frame.size.height = 0;
-//            wkself.contentView.frame = frame;
-//            frame.size.height = tableH;
-//
-//            [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
-//            [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-//            wkself.contentView.frame = frame;
-//            wkself.contentView.alpha = 1;
-//            [UIView commitAnimations];
-//
-//            if (completion) {
-//                completion();
-//            }
-            
             
             float tableH = wkself.contentView.frame.size.height;
             
-           __block CGRect frame = wkself.contentView.frame;
+            CGRect frame = wkself.contentView.frame;
             frame.size.height = 0;
             wkself.contentView.frame = frame;
             
             wkself.contentView.alpha = 0.0f;
             wkself.contentView.layer.shouldRasterize = YES;
             
+            frame.size.height = tableH;
+           
             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-                frame.size.height = tableH;
+                
                 wkself.contentView.frame = frame;
                 wkself.contentView.alpha = 1;
             } completion:^(BOOL finished) {
