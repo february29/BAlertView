@@ -50,7 +50,7 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
 };
 
 typedef void(^BAlertModelshowAnimationBlock)(UIView *view);
-typedef void(^BAlertModelHideAnimationBlock)(UIView *view);
+typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
 
 @interface BToastLable : UILabel
 
@@ -87,17 +87,26 @@ typedef void(^BAlertModelHideAnimationBlock)(UIView *view);
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)(void))completion;
 
--(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showBlock completionBlock:(void(^)(void))completion;
-
-
-//隐藏后 还原keywindow
+//隐藏 最后show出来的View
 - (void)hide;
 - (void)hideWithCompletionBlock:(void(^)(void))completion;
 - (void)hideAnimated:(BOOL)animated;
 - (void)hideAnimated:(BOOL)animated completionBlock:(void(^)(void))completion;
 
-//如果出现二次弹窗时 隐藏所有的弹窗 
+//如果出现二次弹窗时 隐藏所有的弹窗
 - (void)hideAll;
+
+//隐藏特定View 待完善
+//-(void)hideView:(UIView *)view;
+
+
+
+
+// 自定义 动画显示隐藏 （隐藏动画一起传入 因为如果用户点击外部隐藏时 如果无隐藏动画只能无动画隐藏）
+-(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showAnimationBlock hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock;
+
+//-(void)hideView:(UIView *)view hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock;
+
 
 
 

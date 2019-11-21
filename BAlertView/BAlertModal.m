@@ -285,14 +285,11 @@ static BToastLable *toastView = nil;
    
 }
 
-- (void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showBlock completionBlock:(void (^)(void))completion{
-    
+-(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showAnimationBlock hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock{
+    view.b_showBlock = showAnimationBlock;
+    view.b_hideBlock = hideAnimationBlock;
+    [self showAlerView:view disPlayStyle:BAlertViewAnimateCustom];
 }
-
-//-(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType {
-//
-//    [self viewShowAnimateWithAnimateType:animateType completionBlock:nil];
-//}
 
 -(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType completionBlock:(void(^)(void))completion{
     
@@ -445,6 +442,13 @@ static BToastLable *toastView = nil;
             
             break;
         }
+        case BAlertViewAnimateCustom:{
+            if (wkself.contentView.b_showBlock) {
+                wkself.contentView.b_showBlock(wkself.contentView);
+            }
+            
+            break;
+        }
             
          
             
@@ -483,13 +487,7 @@ static BToastLable *toastView = nil;
     
     __weak typeof(self) wkself = self;
     
-    //如果_showViewInfoArray只有1个，证明这是最后一个 背景做动画
-    if ( animated && _showViewArray.count <= 1 ) {
-        wkself.viewController.backBtn.alpha = 1;
-        [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
-           wkself.viewController.backBtn.alpha = 0;
-        }];
-    }
+   
     
     
     if(!animated){
@@ -499,9 +497,13 @@ static BToastLable *toastView = nil;
     }
     
    
+    
  
     BAlertModalViewDisPlayStyle style = view.b_hideStyle;
+    
   
+    //动画隐藏时间 自定义模式时动画隐藏不一定为默认值
+    __block NSTimeInterval hideDuration = BAlertViewAnimateDuration;
     
     switch (style) {
             
@@ -659,6 +661,22 @@ static BToastLable *toastView = nil;
             
             break;
         }
+        case BAlertViewAnimateCustom:{
+            if (view.b_hideBlock) {
+                hideDuration = view.b_hideBlock(view);
+                
+               
+                dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(hideDuration * NSEC_PER_SEC));
+                dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+                    [wkself removeView:view];
+                });
+                
+            }else{
+                NSLog(@"无隐藏动画");
+            }
+           
+            break;
+        }
             
         default:
         {
@@ -689,6 +707,16 @@ static BToastLable *toastView = nil;
             
     }
     
+    //如果_showViewInfoArray只有1个，证明这是最后一个 背景做动画
+      
+    if ( animated && _showViewArray.count <= 1 ) {
+        wkself.viewController.backBtn.alpha = 1;
+        [UIView animateWithDuration:hideDuration animations:^{
+            wkself.viewController.backBtn.alpha = 0;
+        }];
+         
+    }
+    
 }
 
 
@@ -696,18 +724,16 @@ static BToastLable *toastView = nil;
 
 - (void)hideAll{
     
-//    while (_showViewArray.count>0) {
-//        <#statements#>
-//    }
     for (UIView *itemView in _showViewArray) {
         [self hideView:itemView animated:YES completionBlock:nil];
     }
-    
-    
-//    for (int i = 0; i<_showViewArray.count; i++) {
-//        [self hide];
-//    }
 
+}
+
+
+-(void)hideView:(UIView *)view hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock{
+    view.b_hideBlock = hideAnimationBlock;
+    [self hideView:view animated:YES completionBlock:nil];
 }
 
 //MARK: -  clean

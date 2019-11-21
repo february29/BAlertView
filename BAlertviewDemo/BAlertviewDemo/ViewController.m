@@ -9,7 +9,10 @@
 #import "ViewController.h"
 #import "BAlertModal.h"
 
-@interface ViewController ()
+@interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
+
+@property (nonatomic,strong) UITableView *mTableView;
+@property (nonatomic,strong) NSArray *dataArray;
 
 @property (nonatomic,strong) UILabel *firstView;
 
@@ -28,56 +31,9 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     
+    _dataArray = @[@"toast",@"cennterView",@"BottomView",@"NoneView",@"left",@"dropList",@"custom",@"",@"",@""];
    
-    
-    UIButton *buttom  = [[UIButton alloc]initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 100, 200, 30)];
-    [buttom setBackgroundColor:[UIColor greenColor]];
-    [buttom setTitle:@"toast" forState:UIControlStateNormal];
-    [buttom addTarget:self action:@selector(showToast) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttom];
-    
-    
-    UIButton *buttom2  = [[UIButton alloc]initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 150, 200, 30)];
-    [buttom2 setBackgroundColor:[UIColor greenColor]];
-    [buttom2 setTitle:@"cennterView" forState:UIControlStateNormal];
-    buttom2.tag = 1;
-    [buttom2 addTarget:self action:@selector(showView:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttom2];
-    
-    
-    UIButton *buttom3  = [[UIButton alloc]initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 200, 200, 30)];
-    [buttom3 setBackgroundColor:[UIColor greenColor]];
-    [buttom3 setTitle:@"BottomView" forState:UIControlStateNormal];
-    buttom3.tag = 2;
-    [buttom3 addTarget:self action:@selector(showView:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttom3];
-    
-    UIButton *buttom4  = [[UIButton alloc]initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 250, 200, 30)];
-    [buttom4 setBackgroundColor:[UIColor greenColor]];
-    [buttom4 setTitle:@"NoneView" forState:UIControlStateNormal];
-    buttom4.tag = 3;
-    [buttom4 addTarget:self action:@selector(showView:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttom4];
-    
-    
-
-    UIButton *buttom5  = [[UIButton alloc]initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 300, 200, 30)];
-    [buttom5 setBackgroundColor:[UIColor greenColor]];
-    [buttom5 setTitle:@"left" forState:UIControlStateNormal];
-    buttom5.tag = 4;
-    [buttom5 addTarget:self action:@selector(showView:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttom5];
-    
-    UIButton *buttom6  = [[UIButton alloc]initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 350, 200, 30)];
-    [buttom6 setBackgroundColor:[UIColor greenColor]];
-    [buttom6 setTitle:@"dropList" forState:UIControlStateNormal];
-    buttom6.tag = 5;
-    [buttom6 addTarget:self action:@selector(showView:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttom6];
-    /** 将状态栏文本颜色设置为白色 */
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    /** 将状态栏文本颜色设置为黑色 ,默认就是黑色 */
-//    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    self.mTableView.hidden = NO;
     
   
     
@@ -116,26 +72,161 @@
 }
 
 
-
-
-
-//  ============toast用法===========
--(void)showToast{
+-(UITableView *)mTableView{
     
-    //普通用法
-    [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！"];
+    if (!_mTableView) {
+        _mTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        _mTableView.separatorColor = [UIColor clearColor];
+        _mTableView.backgroundColor = [UIColor clearColor];
+        _mTableView.delegate = self;
+        _mTableView.dataSource = self;
+        _mTableView.tableFooterView = [UIView new];
+        _mTableView.rowHeight  = UITableViewAutomaticDimension;
+        _mTableView.estimatedRowHeight = 44;
+        _mTableView.showsHorizontalScrollIndicator  = NO;
+        _mTableView.showsVerticalScrollIndicator = NO;
+        
+        [self.view addSubview:_mTableView];
+        
+        
+        
+        
+    }
     
-  // [[BAlertModal sharedInstance]makeToast:@"he000"];
+    return _mTableView;
     
-    //宏定义用法
-
-//    BMAKETOAST(@"fasdlfjsdljfladsjkfas");
-//    BMAKECENTERTOAST(@"DAFDFASDFASDFA");
     
 }
 
 
-//  ============view用法===========
+
+
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    switch (indexPath.row) {
+        case 0:
+        {
+          //普通用法
+            [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！"];
+            
+          // [[BAlertModal sharedInstance]makeToast:@"he000"];
+            
+            //宏定义用法
+
+        //    BMAKETOAST(@"fasdlfjsdljfladsjkfas");
+        //    BMAKECENTERTOAST(@"DAFDFASDFASDFA");
+          break;
+        }
+        case 1:{
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewCenter];
+            break;
+        }
+        case 2:{
+            //bottom
+//           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewBottom2];
+            //[[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
+            break;
+        }
+         
+        case 3:{
+        
+           [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewNone];
+           break;
+       
+        }
+           
+       
+        case 4:{
+           [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewLeftMove];
+           break;
+       
+        }
+       
+        case 5:{
+          
+//           UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
+//
+//            CGRect rect=[sender convertRect: sender.bounds toView:window];
+
+//           self.firstView.frame = CGRectMake(rect.origin.x, rect.origin.y+rect.size.height+1, rect.size.width,self.firstView.frame.size.height);
+
+            //实际使用时 可计算sender位置 模仿下来选择框
+           [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewDropList];
+           break;
+        }
+               
+        case 6:{
+            
+            [[BAlertModal sharedInstance]showAlerView:self.firstView showAnimationBlock:^(UIView *view) {
+                
+                CGRect rect = view.frame;
+                rect.origin.y = 0;
+                [UIView  animateWithDuration:1 animations:^{
+                    view.frame = rect;
+                } completion:^(BOOL finished) {
+                    
+                }];
+            } hideAnimationBlock:^(UIView *view) {
+               
+                CGRect rect = view.frame;
+                 rect.origin.x = 0;
+                 [UIView  animateWithDuration:1 animations:^{
+                     view.frame = rect;
+                 } completion:^(BOOL finished) {
+                     
+                 }];
+                
+                //返回动画时间 告诉BAlerModel 动画执行完毕可以进行清理工作。
+                return 3.0;
+            }];
+            break;
+        }
+        case 7:{
+            break;
+        }
+        case 8:{
+            break;
+        }
+            
+            
+            
+        default:
+            break;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString *identifier = @"cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    
+    //cell配置
+    cell.textLabel.text = self.dataArray[indexPath.row];
+    
+    
+    
+    return cell;
+}
+
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    return [UIView new];
+}
+
 -(void)showView:(UIButton *)sender{
     
     
