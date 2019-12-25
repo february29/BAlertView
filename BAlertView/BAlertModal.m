@@ -27,6 +27,11 @@
 
 //==============view viewController================
 
+@interface BAlerterViewController()
+
+@property (nonatomic,assign) BOOL iskeyBoardShow;
+@end
+
 
 @implementation BAlerterViewController
 
@@ -69,12 +74,31 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+-(void)keyboardWillShow:(NSNotification *)notification{
+    self.iskeyBoardShow = YES;
+}
+-(void)keyboardWillHide:(NSNotification *)notification{
+     self.iskeyBoardShow = NO;
+}
 
 -(void)dimiss{
-    
-//    if (self.shouldTapOutSideClosed) {
-         [[BAlertModal sharedInstance] hide];
-//    }
+    if (self.iskeyBoardShow) {
+        [self.view endEditing:YES];
+    }else{
+        [[BAlertModal sharedInstance] hide];
+    }
    
 }
 @end

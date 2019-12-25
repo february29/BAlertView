@@ -119,7 +119,7 @@
           break;
         }
         case 1:{
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewCenter];
+            [[BAlertModal sharedInstance]showAlerView:self.secendView disPlayStyle:BAlertModalViewCenter];
             break;
         }
         case 2:{
@@ -226,89 +226,6 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     return [UIView new];
 }
-
--(void)showView:(UIButton *)sender{
-    
-    
-    
-//    NSString *message =@"lajldjlajdk\neeeheeeee";
-    
-    
-   
-    
-    
-
-    
-    int tag = (int)sender.tag;
-    switch (tag) {
-        case 1:
-        {
-            //center
-            
-           
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewCenter];
-//             [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
-            break;
-        }
-        case 2:
-        {
-            //bottom
-//           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewBottom2];
-            //[[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
-            break;
-        }
-        case 3:
-        {
-            //none
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewNone];
-            break;
-        }
-            
-        case 4:
-        {
-            //none
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewLeftMove];
-            
-            
-           
-            break;
-
-        }
-        case 5:
-        {
-            //none
-            UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
-            CGRect rect=[sender convertRect: sender.bounds toView:window];
-
-            self.firstView.frame = CGRectMake(rect.origin.x, rect.origin.y+rect.size.height+1, rect.size.width,self.firstView.frame.size.height);
-
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewDropList];
-           
-            
-           
-            
-            break;
-            
-            
-            
-        }
-        
-
-            
-        default:
-            break;
-    }
-    
-    
-    
-    
-    
-    
-    
-}
-
-
 
 
 
