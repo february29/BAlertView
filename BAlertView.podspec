@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'BAlertView'
-    spec.version      = '1.1.4'
+    spec.version      = '1.1.5'
     spec.summary      = '1.show a toast 2.modle show a customview'
     spec.homepage     = 'https://github.com/february29/BAlertView'
     spec.license      = 'MIT'
