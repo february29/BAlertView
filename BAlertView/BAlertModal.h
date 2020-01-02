@@ -52,6 +52,9 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
 typedef void(^BAlertModelshowAnimationBlock)(UIView *view);
 typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
 
+typedef void(^BAlertModelshowCompletionBlock)(void);
+typedef void(^BAlertModelHideCompletionBlock)(void);
+
 @interface BToastLable : UILabel
 
 @end
@@ -62,11 +65,21 @@ typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
 @property(nonatomic)BOOL shouldTapOutSideClosed;
 @property(nonatomic,readwrite,retain) UIButton *backBtn;
 
+@property (nonatomic,strong) NSMutableArray *viewsArray;
+
 @end
 
 
 @interface BAlertModal : NSObject
 
+// MARK: - 属性
+
+///view的背景颜色
+@property(nonatomic,retain,readwrite)UIColor *backgroundColor;
+@property(nonatomic)BOOL shouldTapOutSideClosed;
+
+
+// MARK: - 方法
 + (instancetype)sharedInstance;
 
 //  ============toast===========
@@ -77,9 +90,7 @@ typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
 
 //  ============view===========
 
-///view的背景颜色
-@property(nonatomic,retain,readwrite)UIColor *backgroundColor;
-@property(nonatomic)BOOL shouldTapOutSideClosed;
+
 
 -(void)showAlerView:(UIView *)view;
 -(void)showAlerView:(UIView *)view  animated:(BOOL)animated;
@@ -106,6 +117,7 @@ typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
 -(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showAnimationBlock hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock;
 
 //-(void)hideView:(UIView *)view hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock;
+
 
 
 

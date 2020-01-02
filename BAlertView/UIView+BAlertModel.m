@@ -14,6 +14,9 @@ NSString *const bShowStyleKey = @"bShowStyleKey";
 NSString *const bHideStyleKey = @"bHideStyleKey";
 NSString *const bShowBlockKey = @"bShowBlockKey";
 NSString *const bHideBlockKey = @"bHideBlockKey";
+NSString *const bShowCompletionBlockKey = @"bShowCompletionBlockKey";
+NSString *const bHideCompletionBlockKey = @"bHideCompletionBlockKey";
+NSString *const bTapOutsideHideCompletionBlock = @"bTapOutsideHideCompletionBlock";
 
 @implementation UIView (BAlertModel)
 
@@ -53,6 +56,30 @@ NSString *const bHideBlockKey = @"bHideBlockKey";
 }
 
 
+- (BAlertModelshowCompletionBlock)b_showCompletionBlock{
+    return objc_getAssociatedObject(self, &bShowCompletionBlockKey);
+}
+
+-(void)setB_showCompletionBlock:(BAlertModelshowCompletionBlock)b_showCompletionBlock{
+    objc_setAssociatedObject(self, &bShowCompletionBlockKey, b_showCompletionBlock, OBJC_ASSOCIATION_COPY);
+}
+
+-(BAlertModelHideCompletionBlock)b_hideCompletionBlock{
+     return objc_getAssociatedObject(self, &bHideCompletionBlockKey);
+}
+
+-(void)setB_hideCompletionBlock:(BAlertModelHideCompletionBlock)b_hideCompletionBlock{
+    objc_setAssociatedObject(self, &b_hideCompletionBlock, b_hideCompletionBlock, OBJC_ASSOCIATION_COPY);
+
+}
+
+- (BAlertModelHideCompletionBlock)b_tapOutsideHideCompletionBlock{
+    return objc_getAssociatedObject(self, &bTapOutsideHideCompletionBlock);
+}
+
+-(void)setB_tapOutsideHideCompletionBlock:(BAlertModelHideCompletionBlock)b_tapOutsideHideCompletionBlock{
+    objc_setAssociatedObject(self, &bTapOutsideHideCompletionBlock, b_tapOutsideHideCompletionBlock, OBJC_ASSOCIATION_COPY);
+}
 
 
 

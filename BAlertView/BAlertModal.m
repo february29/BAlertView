@@ -97,7 +97,8 @@
     if (self.iskeyBoardShow) {
         [self.view endEditing:YES];
     }else{
-        [[BAlertModal sharedInstance] hide];
+        UIView *hideView = [self.viewsArray lastObject];
+        [[BAlertModal sharedInstance] hideWithCompletionBlock:hideView.b_tapOutsideHideCompletionBlock];
     }
    
 }
@@ -108,14 +109,16 @@ static BToastLable *toastView = nil;
 
 @interface BAlertModal()
 
+/// 用于显示alertview的window。
 @property (nonatomic,strong) UIWindow *window;
+/// window上的vc
 @property (nonatomic,strong) BAlerterViewController *viewController;
-@property (nonatomic,strong) UIView *contentView;
-//记录显示的view
-@property (nonatomic,strong) NSMutableArray *showViewArray;
-
-
+/// 原来应用的view
 @property (nonatomic,strong) UIWindow *delegateWindow;
+/// 最后显示view
+@property (nonatomic,strong) UIView *contentView;
+/// 记录显示出来view的array
+@property (nonatomic,strong) NSMutableArray *showViewArray;
 
 @end
 
@@ -259,6 +262,13 @@ static BToastLable *toastView = nil;
     [self showAlerView:view disPlayStyle:style animated:animated completionBlock:nil];
 }
 
+-(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showAnimationBlock hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock{
+    view.b_showBlock = showAnimationBlock;
+    view.b_hideBlock = hideAnimationBlock;
+    [self showAlerView:view disPlayStyle:BAlertViewAnimateCustom];
+}
+
+
 
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)(void))completion{
     if (!_window) {
@@ -273,6 +283,7 @@ static BToastLable *toastView = nil;
         _viewController = [[BAlerterViewController alloc] init];;
         _viewController.backgroundColor = _backgroundColor?_backgroundColor:BAlertViewBackGroundColor;
         _viewController.shouldTapOutSideClosed = _shouldTapOutSideClosed;
+        _viewController.viewsArray = self.showViewArray;
     }
     
      __weak typeof(self) wkself = self;
@@ -292,6 +303,7 @@ static BToastLable *toastView = nil;
     
     view.b_showStyle = style;
     view.b_hideStyle = style;
+    view.b_showCompletionBlock = completion;
     [_showViewArray addObject:view];
     
     
@@ -303,17 +315,16 @@ static BToastLable *toastView = nil;
         [wkself.window makeKeyAndVisible];
         if(animated){
             [wkself viewShowAnimateWithAnimateType:style completionBlock:completion];
+        }else{
+            if (completion) {
+                completion();
+            }
         }
     });
     
    
 }
 
--(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showAnimationBlock hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock{
-    view.b_showBlock = showAnimationBlock;
-    view.b_hideBlock = hideAnimationBlock;
-    [self showAlerView:view disPlayStyle:BAlertViewAnimateCustom];
-}
 
 -(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType completionBlock:(void(^)(void))completion{
     
@@ -511,12 +522,12 @@ static BToastLable *toastView = nil;
     
     __weak typeof(self) wkself = self;
     
-   
-    
-    
     if(!animated){
 //         wkself.viewController.backBtn.alpha = 0;
         [wkself removeView:view];;
+        if(completion){
+            completion();
+        }
         return;
     }
     
@@ -524,6 +535,7 @@ static BToastLable *toastView = nil;
     
  
     BAlertModalViewDisPlayStyle style = view.b_hideStyle;
+    view.b_hideCompletionBlock = completion;
     
   
     //动画隐藏时间 自定义模式时动画隐藏不一定为默认值
@@ -682,6 +694,9 @@ static BToastLable *toastView = nil;
             
             //带完善 ，现背景消失无动画
             [wkself removeView:view];
+            if(completion){
+                completion();
+            }
             
             break;
         }
@@ -693,6 +708,10 @@ static BToastLable *toastView = nil;
                 dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(hideDuration * NSEC_PER_SEC));
                 dispatch_after(delayTime, dispatch_get_main_queue(), ^{
                     [wkself removeView:view];
+                    //不执行,因为通常情况下 完成回调在定义hideblock时设置。
+//                    if(completion){
+//                        completion();
+//                    }
                 });
                 
             }else{

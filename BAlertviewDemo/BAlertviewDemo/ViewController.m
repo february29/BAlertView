@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "BAlertModal.h"
+#import "UIView+BAlertModel.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -43,7 +44,7 @@
     if (!_firstView) {
         _firstView = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
         _firstView.userInteractionEnabled = YES;
-        _firstView.text = @"000000";
+//        _firstView.text = @"000000";
         UITapGestureRecognizer *tap= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(secondShow)];
         [_firstView addGestureRecognizer:tap];
         [_firstView setBackgroundColor:[UIColor yellowColor]];
@@ -56,16 +57,23 @@
 -(UILabel *)secendView{
     if (!_secendView) {
 
-        _secendView = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 300)];
+        _secendView = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
         _secendView.userInteractionEnabled = YES;
+        
+        //隐藏所有view。
         UITapGestureRecognizer *tap2= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideAll)];
         [_secendView addGestureRecognizer:tap2];
+        
+        //隐藏完毕后执行block
+        _secendView.b_tapOutsideHideCompletionBlock = ^{
+            NSLog(@"点击外部隐藏block");
+        };
+        
+        //键盘弹出时点击外部会先收键盘
         UITextField *tf = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 100, 50)];
         tf.layer.borderColor = UIColor.greenColor.CGColor;
         tf.layer.borderWidth = 1;
         [_secendView addSubview:tf];
-    
-        _secendView.text = @"222222222222";
         _secendView.backgroundColor = [UIColor purpleColor];
     }
     return _secendView;
@@ -120,6 +128,7 @@
         }
         case 1:{
             [[BAlertModal sharedInstance]showAlerView:self.secendView disPlayStyle:BAlertModalViewCenter];
+            
             break;
         }
         case 2:{
@@ -232,7 +241,7 @@
 -(void)secondShow{
     
     [[BAlertModal sharedInstance]showAlerView:self.secendView disPlayStyle:BAlertModalViewBottom animated:YES];
-    [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
+//    [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
 }
 
 -(void)hideAll{
