@@ -15,59 +15,10 @@
 
 //#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "BAletToastManager.h"
+#import "BAlertViewManager.h"
 
 
-
-typedef NS_ENUM(NSInteger,BAlertModalViewDisPlayStyle){
-    BAlertModalViewNone,// 位置根据传入的view frame决定
-    BAlertModalViewCenter,//默认中间 宽高自定
-    BAlertModalViewBottom ,//底部 view宽度与屏幕等宽，高度自定 window不缩小
-    BAlertModalViewBottom2,//底部 window 缩小
-    BAlertModalViewLeftMove,//从左侧移动过来
-    BAlertModalViewLeftMove2,//从左侧移动过来 keyWindow跟随移动
-    BAlertModalViewRightMove,//从右侧移动过来
-    BAlertModalViewRightMove2,//从右侧移动过来 keyWindow跟随移动
-    BAlertModalViewDropList, //下拉样式显示
-    BAlertViewAnimateCustom // 自定义 尚需完善
-   
-    
-};
-
-
-
-typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayStyle){
-    BAlertModalToastTop,
-    BAlertModalToastCenter,
-    BAlertModalToastBottom
-    
-};
-
-typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
-    BAlertModalToastLong, //4s
-    BAlertModalToastshort //2s
-   
-    
-};
-
-typedef void(^BAlertModelshowAnimationBlock)(UIView *view);
-typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
-
-typedef void(^BAlertModelshowCompletionBlock)(void);
-typedef void(^BAlertModelHideCompletionBlock)(void);
-
-@interface BToastLable : UILabel
-
-@end
-
-@interface BAlerterViewController : UIViewController
-
-@property(nonatomic,readwrite,retain)UIColor *backgroundColor;
-@property(nonatomic)BOOL shouldTapOutSideClosed;
-@property(nonatomic,readwrite,retain) UIButton *backBtn;
-
-@property (nonatomic,strong) NSMutableArray *viewsArray;
-
-@end
 
 
 @interface BAlertModal : NSObject
@@ -106,12 +57,6 @@ typedef void(^BAlertModelHideCompletionBlock)(void);
 
 //如果出现二次弹窗时 隐藏所有的弹窗
 - (void)hideAll;
-
-//隐藏特定View 待完善
-//-(void)hideView:(UIView *)view;
-
-
-
 
 // 自定义 动画显示隐藏 （隐藏动画一起传入 因为如果用户点击外部隐藏时 如果无隐藏动画只能无动画隐藏）
 -(void)showAlerView:(UIView *)view showAnimationBlock:(BAlertModelshowAnimationBlock)showAnimationBlock hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock;

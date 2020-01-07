@@ -116,14 +116,15 @@
         case 0:
         {
           //普通用法
-            [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！"];
+//            [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！"];
+             [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！" disPlayStyle:BAlertModalToastBottom showTime:BAlertModalToastLong];
             
           // [[BAlertModal sharedInstance]makeToast:@"he000"];
             
             //宏定义用法
 
-        //    BMAKETOAST(@"fasdlfjsdljfladsjkfas");
-        //    BMAKECENTERTOAST(@"DAFDFASDFASDFA");
+//            BMAKETOAST([NSNull null]);
+            BMAKECENTERTOAST(@"DAFDFASDFASDFA");
           break;
         }
         case 1:{
@@ -134,8 +135,8 @@
         case 2:{
             //bottom
 //           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewBottom2];
-            //[[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
+            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewBottom];
+            [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
             break;
         }
          
