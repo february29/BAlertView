@@ -136,7 +136,8 @@
             //bottom
 //           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
             [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewBottom];
-            [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
+//            [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
+             [[BAlertModal sharedInstance]setShouldTapOutSideClosed:NO];
             break;
         }
          
