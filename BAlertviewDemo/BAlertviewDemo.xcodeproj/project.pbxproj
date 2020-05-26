@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		00355388237F7AEB00DE11C9 /* UIView+BAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 00355387237F7AEB00DE11C9 /* UIView+BAlertModel.m */; };
-		00523D7423C41F21002D1DC9 /* BAletToastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00523D7323C41F21002D1DC9 /* BAletToastManager.m */; };
+		00367671247C9C9B00CC01C8 /* BAlertViewConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 00367670247C9C9B00CC01C8 /* BAlertViewConfig.m */; };
+		00367674247CA15700CC01C8 /* BAlertToastConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 00367673247CA15700CC01C8 /* BAlertToastConfig.m */; };
+		00523D7423C41F21002D1DC9 /* BAlertToastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00523D7323C41F21002D1DC9 /* BAlertToastManager.m */; };
 		00523D7723C42843002D1DC9 /* BAlertViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00523D7623C42843002D1DC9 /* BAlertViewManager.m */; };
 		217606E11D0CF816003C455E /* BAlertModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 217606E01D0CF816003C455E /* BAlertModal.m */; };
 		21D251611CE2DB7900E8C1E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D251601CE2DB7900E8C1E5 /* main.m */; };
@@ -22,11 +24,14 @@
 /* Begin PBXFileReference section */
 		00355386237F7AEB00DE11C9 /* UIView+BAlertModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+BAlertModel.h"; sourceTree = "<group>"; };
 		00355387237F7AEB00DE11C9 /* UIView+BAlertModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+BAlertModel.m"; sourceTree = "<group>"; };
-		00523D7223C41F21002D1DC9 /* BAletToastManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BAletToastManager.h; sourceTree = "<group>"; };
-		00523D7323C41F21002D1DC9 /* BAletToastManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAletToastManager.m; sourceTree = "<group>"; };
+		0036766F247C9C9B00CC01C8 /* BAlertViewConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BAlertViewConfig.h; sourceTree = "<group>"; };
+		00367670247C9C9B00CC01C8 /* BAlertViewConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAlertViewConfig.m; sourceTree = "<group>"; };
+		00367672247CA15700CC01C8 /* BAlertToastConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BAlertToastConfig.h; sourceTree = "<group>"; };
+		00367673247CA15700CC01C8 /* BAlertToastConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAlertToastConfig.m; sourceTree = "<group>"; };
+		00523D7223C41F21002D1DC9 /* BAlertToastManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BAlertToastManager.h; sourceTree = "<group>"; };
+		00523D7323C41F21002D1DC9 /* BAlertToastManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAlertToastManager.m; sourceTree = "<group>"; };
 		00523D7523C42843002D1DC9 /* BAlertViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BAlertViewManager.h; sourceTree = "<group>"; };
 		00523D7623C42843002D1DC9 /* BAlertViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BAlertViewManager.m; sourceTree = "<group>"; };
-		217606DE1D0CF816003C455E /* BAlertConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAlertConfig.h; sourceTree = "<group>"; };
 		217606DF1D0CF816003C455E /* BAlertModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAlertModal.h; sourceTree = "<group>"; };
 		217606E01D0CF816003C455E /* BAlertModal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAlertModal.m; sourceTree = "<group>"; };
 		21D2515C1CE2DB7900E8C1E5 /* BAlertviewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BAlertviewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,11 +60,14 @@
 		217606DD1D0CF816003C455E /* BAlertView */ = {
 			isa = PBXGroup;
 			children = (
-				217606DE1D0CF816003C455E /* BAlertConfig.h */,
+				0036766F247C9C9B00CC01C8 /* BAlertViewConfig.h */,
+				00367670247C9C9B00CC01C8 /* BAlertViewConfig.m */,
+				00367672247CA15700CC01C8 /* BAlertToastConfig.h */,
+				00367673247CA15700CC01C8 /* BAlertToastConfig.m */,
 				217606DF1D0CF816003C455E /* BAlertModal.h */,
 				217606E01D0CF816003C455E /* BAlertModal.m */,
-				00523D7223C41F21002D1DC9 /* BAletToastManager.h */,
-				00523D7323C41F21002D1DC9 /* BAletToastManager.m */,
+				00523D7223C41F21002D1DC9 /* BAlertToastManager.h */,
+				00523D7323C41F21002D1DC9 /* BAlertToastManager.m */,
 				00523D7523C42843002D1DC9 /* BAlertViewManager.h */,
 				00523D7623C42843002D1DC9 /* BAlertViewManager.m */,
 				00355386237F7AEB00DE11C9 /* UIView+BAlertModel.h */,
@@ -181,7 +189,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00523D7423C41F21002D1DC9 /* BAletToastManager.m in Sources */,
+				00367674247CA15700CC01C8 /* BAlertToastConfig.m in Sources */,
+				00367671247C9C9B00CC01C8 /* BAlertViewConfig.m in Sources */,
+				00523D7423C41F21002D1DC9 /* BAlertToastManager.m in Sources */,
 				00523D7723C42843002D1DC9 /* BAlertViewManager.m in Sources */,
 				21D251671CE2DB7900E8C1E5 /* ViewController.m in Sources */,
 				21D251641CE2DB7900E8C1E5 /* AppDelegate.m in Sources */,

@@ -22,19 +22,19 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-     _backBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, MSCW, MSCH)];
+     _backBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     [_backBtn addTarget:self action:@selector(dimiss) forControlEvents:UIControlEventTouchUpInside];
-    [_backBtn setBackgroundColor:_backgroundColor];
+    [_backBtn setBackgroundColor:self.backgroundColor];
     [self.view addSubview:_backBtn];
 }
 //ios8 隐藏状态栏
 - (BOOL)prefersStatusBarHidden
 {
-    return BAlertViewAPPStatusBarHidden; // 返回NO表示要显示，返回YES将hiden
+    return self.alertViewPrefersStatusBarHidden; // 返回NO表示要显示，返回YES将hiden
 }
 - (UIStatusBarStyle)preferredStatusBarStyle{
    
-    return [UIApplication sharedApplication].statusBarStyle;
+    return self.aletViewPreferredStatusBarStyle;;
 }
 -(void)setBackgroundColor:(UIColor *)backgroundColor{
     
@@ -46,11 +46,17 @@
 }
 
 -(void)setShouldTapOutSideClosed:(BOOL)shouldTapOutSideClosed{
-    _shouldTapOutSideClosed = shouldTapOutSideClosed;
     
-
+    _shouldTapOutSideClosed = shouldTapOutSideClosed;
     _backBtn.userInteractionEnabled = shouldTapOutSideClosed;
     
+}
+
+-(void)setAletViewPreferredStatusBarStyle:(UIStatusBarStyle)aletViewPreferredStatusBarStyle{
+    _aletViewPreferredStatusBarStyle = aletViewPreferredStatusBarStyle;
+}
+-(void)setAlertViewPrefersStatusBarHidden:(BOOL)alertViewPrefersStatusBarHidden{
+    _alertViewPrefersStatusBarHidden = alertViewPrefersStatusBarHidden;
 }
 
 //取消编辑状态，alertView中带输入框时 如果设置shouldTapOutSideClosed 为no时可回收键盘
@@ -82,9 +88,10 @@
     if (self.iskeyBoardShow) {
         [self.view endEditing:YES];
     }else{
-        UIView *hideView = [self.viewsArray lastObject];
-        [[BAlertModal sharedInstance] hideWithCompletionBlock:hideView.b_tapOutsideHideCompletionBlock];
+        UIView *hideView = [self.manager.showViewArray lastObject];
+        [self.manager hideWithCompletionBlock:hideView.b_tapOutsideHideCompletionBlock];
     }
+        
    
 }
 @end
@@ -99,8 +106,7 @@
 @property (nonatomic,strong) UIWindow *delegateWindow;
 /// 最后显示view
 @property (nonatomic,strong) UIView *contentView;
-/// 记录显示出来view的array
-@property (nonatomic,strong) NSMutableArray *showViewArray;
+
 
 @end
 
@@ -118,6 +124,8 @@
         self.shouldTapOutSideClosed = YES;
         _showViewArray = [NSMutableArray new];
         _delegateWindow =  [[[UIApplication sharedApplication] delegate] window];
+        
+        self.config = [BAlertViewConfig defaultConfig];
     }
     return self;
 }
@@ -160,10 +168,16 @@
     }
     
     if (!_viewController) {
-        _viewController = [[BAlerterViewController alloc] init];;
-        _viewController.backgroundColor = _backgroundColor?_backgroundColor:BAlertViewBackGroundColor;
-        _viewController.shouldTapOutSideClosed = _shouldTapOutSideClosed;
-        _viewController.viewsArray = self.showViewArray;
+        _viewController = [[BAlerterViewController alloc] init];
+       
+        _viewController.manager = self;
+    
+        _viewController.backgroundColor = self.config.alertViewBackGroundColor;
+        _viewController.shouldTapOutSideClosed = self.config.alertViewShouldTapOutsideClosed;
+        _viewController.aletViewPreferredStatusBarStyle = self.config.alertViewPreferredStatusBarStyle;
+        _viewController.alertViewPrefersStatusBarHidden = self.config.alertViewPrefersStatusBarHidden;
+        
+        
     }
     
      __weak typeof(self) wkself = self;
@@ -175,7 +189,7 @@
     //_showViewInfoArray  有内容证明 已经显示了 此时为二次弹窗 不需要动画
     if (animated && _showViewArray.count == 0 ) {
         wkself.viewController.backBtn.alpha = 0;
-        [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+        [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
            wkself.viewController.backBtn.alpha = 1;
         }];
     }
@@ -215,7 +229,7 @@
         case BAlertModalViewBottom2:
         {
             wkself.delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                wkself.delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
             }];
             //这里没有Break 会执行下面的动画
@@ -226,15 +240,15 @@
             CGRect newRct =     wkself.contentView.frame ;
 //            newRct.size.width = MSCW;
             newRct.origin.x = 0;
-            newRct.origin.y = MSCH; //开始的时候在屏幕下方
+            newRct.origin.y = [UIScreen mainScreen].bounds.size.height; //开始的时候在屏幕下方
            
             wkself.contentView.frame = newRct;
     
 //            wkself.contentView.layer.shouldRasterize = YES;
             
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                 CGRect newRct = wkself.contentView.frame ;
-                newRct.origin.y = MSCH-newRct.size.height;
+                newRct.origin.y = [UIScreen mainScreen].bounds.size.height-newRct.size.height;
                 wkself.contentView.frame = newRct;
                 wkself.contentView.alpha = 1.0f;
                 
@@ -254,7 +268,7 @@
             wkself.contentView.alpha = 0;
 //            wkself.contentView.layer.shouldRasterize = YES;
             wkself.contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                 wkself.contentView.alpha = 1;
                 wkself.contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
             } completion:^(BOOL finished) {
@@ -279,7 +293,7 @@
             wkself.contentView.frame = startFrame;
             wkself.contentView.alpha = 0.0f;
            
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                 
                 wkself.contentView.frame = endFrame;
                 wkself.contentView.alpha = 1;
@@ -296,7 +310,7 @@
         case BAlertModalViewLeftMove2:{
             wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
             
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, wkself.contentView.frame.size.width, 0);
             }];
         }
@@ -309,7 +323,7 @@
             wkself.contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -wkself.contentView.frame.size.width, 0);
             
 //            wkself.contentView.layer.shouldRasterize = YES;
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                 wkself.contentView.alpha = 1;
                 wkself.contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
             } completion:^(BOOL finished) {
@@ -328,7 +342,7 @@
         case BAlertModalViewRightMove2:{
             wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
             
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -wkself.contentView.frame.size.width, 0);
             }];
         }
@@ -340,7 +354,7 @@
             wkself.contentView.transform = CGAffineTransformMakeTranslation(wkself.contentView.frame.size.width, 0);
             
 //            wkself.contentView.layer.shouldRasterize = YES;
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                 wkself.contentView.alpha = 1;
                 wkself.contentView.transform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
@@ -423,7 +437,7 @@
     
   
     //动画隐藏时间 自定义模式时动画隐藏不一定为默认值
-    __block NSTimeInterval hideDuration = BAlertViewAnimateDuration;
+    __block NSTimeInterval hideDuration = self.config.alertViewAnimateDuration;
     
     switch (style) {
             
@@ -432,7 +446,7 @@
             
            
             wkself.delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                 wkself.delegateWindow.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
             }];
 
@@ -441,9 +455,9 @@
         {
 
 //            view.layer.shouldRasterize = YES;
-            [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+            [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                 CGRect newRct = view.frame ;
-                newRct.origin.y = MSCH;
+                newRct.origin.y = [UIScreen mainScreen].bounds.size.height;
                 view.frame = newRct;
                 view.alpha = 0.8f;
             } completion:^(BOOL finished) {
@@ -473,7 +487,7 @@
                 wkself.contentView.alpha = 1.0f;
 //                view.layer.shouldRasterize = YES;
                 
-                [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                [UIView animateWithDuration:self.config.alertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     view.alpha = 0;
                    
                     frame.size.height = 0;
@@ -502,7 +516,7 @@
         case BAlertModalViewLeftMove2:{
             
              wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, view.frame.size.width, 0);
-             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+             [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                  wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
              }];
         }
@@ -516,7 +530,7 @@
                 
 //                view.layer.shouldRasterize = YES;
      
-                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                     view.alpha = 0;
                     view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -view.frame.size.width, 0);
                 } completion:^(BOOL finished) {
@@ -538,7 +552,7 @@
         case BAlertModalViewRightMove2:{
             
              wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -view.frame.size.width, 0);
-             [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+             [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                  wkself.delegateWindow.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
              }];
         }
@@ -553,7 +567,7 @@
 //               view.layer.shouldRasterize = YES;
 //               contentView.transform = CGAffineTransformMakeTranslation(-contentView.frame.size.width, 0);
     
-               [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+               [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                    view.alpha = 0;
                    view.transform = CGAffineTransformMakeTranslation(view.frame.size.width, 0);
 //                   contentView.transform = CGAffineTransformIdentity;
@@ -610,10 +624,10 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
 //                view.layer.shouldRasterize = YES;
-                [UIView animateWithDuration:BAlertViewAnimateDuration animations:^{
+                [UIView animateWithDuration:self.config.alertViewAnimateDuration animations:^{
                     view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
                 } completion:^(BOOL finished){
-                    [UIView animateWithDuration:BAlertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                    [UIView animateWithDuration:self.config.alertViewAnimateDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                         view.alpha = 0;
                         view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
                     } completion:^(BOOL finished2){
@@ -685,8 +699,10 @@
     wkself.window = nil;
     
     //还原为默认
-    self.backgroundColor = BAlertViewBackGroundColor;
-    self.shouldTapOutSideClosed = BAlertViewShouldTapOutsideClosed;
+    self.backgroundColor = self.config.alertViewBackGroundColor;
+    self.shouldTapOutSideClosed = self.config.alertViewShouldTapOutsideClosed;
+    self.alertViewPrefersStatusBarHidden = self.config.alertViewPrefersStatusBarHidden;
+    self.aletViewPreferredStatusBarStyle = self.config.alertViewPreferredStatusBarStyle;
     
     
 }
@@ -702,7 +718,7 @@
 
     if (_backgroundColor !=backgroundColor) {
         _backgroundColor = backgroundColor;
-        // 没有show之前viewController为空这句话不会执行真正的赋值操作在show里面 viewController.backgroundColor = _backgroundColor?_backgroundColor:BAlertViewBackGroundColor;
+        // 没有show之前viewController为空这句话不会执行真正的赋值操作在show里面 或者调用show之后再设置次属性
         self.viewController.backgroundColor = backgroundColor;
 
     }
@@ -713,12 +729,29 @@
 -(void)setShouldTapOutSideClosed:(BOOL)shouldTapOutSideClosed{
     if(_shouldTapOutSideClosed != shouldTapOutSideClosed){
         _shouldTapOutSideClosed = shouldTapOutSideClosed;
-        // 没有show之前viewController为空这句话不会执行真正的赋值操作在show里面
+        // 没有show之前viewController为空这句话不会执行真正的赋值操作在show里面 或者调用show之后再设置次属性
         self.viewController.shouldTapOutSideClosed = shouldTapOutSideClosed;
     }
 
 }
 
+
+
+-(void)setAletViewPreferredStatusBarStyle:(UIStatusBarStyle)aletViewPreferredStatusBarStyle{
+    if (_aletViewPreferredStatusBarStyle != aletViewPreferredStatusBarStyle ) {
+        _aletViewPreferredStatusBarStyle = aletViewPreferredStatusBarStyle;
+        // 没有show之前viewController为空这句话不会执行真正的赋值操作在show里面 或者调用show之后再设置次属性
+        self.viewController.aletViewPreferredStatusBarStyle = aletViewPreferredStatusBarStyle;
+    }
+}
+
+- (void)setAlertViewPrefersStatusBarHidden:(BOOL)alertViewPrefersStatusBarHidden{
+    if (_alertViewPrefersStatusBarHidden != alertViewPrefersStatusBarHidden) {
+        _alertViewPrefersStatusBarHidden = alertViewPrefersStatusBarHidden;
+        // 没有show之前viewController为空这句话不会执行真正的赋值操作在show里面 或者调用show之后再设置次属性
+        self.viewController.alertViewPrefersStatusBarHidden = alertViewPrefersStatusBarHidden;
+    }
+}
 
 
 @end

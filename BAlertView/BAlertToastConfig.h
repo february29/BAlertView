@@ -1,13 +1,13 @@
 //
-//  BAletToastManager.h
+//  BAlertToastConfig.h
 //  BAlertviewDemo
 //
-//  Created by edz on 2020/1/7.
+//  Created by edz on 2020/5/26.
 //  Copyright © 2020 bai.xianzhi. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "BAlertConfig.h"
+
 
 typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayStyle){
     BAlertModalToastTop,
@@ -25,20 +25,24 @@ typedef NS_ENUM(NSInteger,BAlertModalToastDisPlayTime){
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface BToastLable : UILabel
-
-@end
-
-@interface BAletToastManager : NSObject
-
-+(instancetype)manager;
-
--(void)makeToast:(NSString*)message;
-
--(void)makeToast:(NSString *)message disPlayStyle:(BAlertModalToastDisPlayStyle)style;
+@interface BAlertToastConfig : NSObject
 
 
--(void)makeToast:(NSString *)message disPlayStyle:(BAlertModalToastDisPlayStyle)style showTime:(BAlertModalToastDisPlayTime)showTime;
+@property (nonatomic,assign) UIFont *tostFont;
+
+@property (nonatomic,assign) CGFloat tostCornerRadius;
+
+
+@property (nonatomic,strong) UIColor *toastBackGrondColor;
+@property (nonatomic,strong) UIColor *toastTextColor;
+
+
+
+
+
+
+//默认配置
++(instancetype) defaultConfig;
 
 @end
 

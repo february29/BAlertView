@@ -6,7 +6,7 @@
 //  Copyright © 2020 bai.xianzhi. All rights reserved.
 //
 
-#import "BAletToastManager.h"
+#import "BAlertToastManager.h"
 
 //==============tostlable================
 
@@ -19,14 +19,14 @@
 @end
 
 
-@interface BAletToastManager()
+@interface BAlertToastManager()
 
 @end
 
 
 
 
-@implementation BAletToastManager
+@implementation BAlertToastManager
 
 
 + (instancetype)manager{
@@ -36,6 +36,7 @@
 {
     self = [super init];
     if (self) {
+        _config = [BAlertToastConfig defaultConfig];
     }
     return self;
 }
@@ -70,11 +71,11 @@
     
 
     BToastLable *toastView = [[BToastLable alloc] init];
-    toastView.backgroundColor = BAlertToastBackGrond;
-    toastView.textColor = BAlertToastTextColor;
-    toastView.font = [UIFont systemFontOfSize:BAlertToastFont];
+    toastView.backgroundColor = self.config.toastBackGrondColor;
+    toastView.textColor = self.config.toastTextColor;
+    toastView.font = self.config.tostFont;
     toastView.layer.masksToBounds = YES;
-    toastView.layer.cornerRadius = 4.0f;
+    toastView.layer.cornerRadius = self.config.tostCornerRadius;
     toastView.textAlignment = NSTextAlignmentCenter;
     toastView.alpha = 0;
     toastView.numberOfLines = 0;
@@ -83,21 +84,21 @@
     
    
     
-    CGFloat width = [self stringText:message font:BAlertToastFont isHeightFixed:YES fixedValue:30]+10;
+    CGFloat width = [self stringText:message font:self.config.tostFont isHeightFixed:YES fixedValue:30]+10;
     CGFloat height = 30;
-    if (width > MSCW - 20) {
-        width = MSCW - 20;
-        height = [self stringText:message font:BAlertToastFont isHeightFixed:NO fixedValue:width]+4;
+    if (width > [UIScreen mainScreen].bounds.size.width- 20) {
+        width = [UIScreen mainScreen].bounds.size.width - 20;
+        height = [self stringText:message font:self.config.tostFont isHeightFixed:NO fixedValue:width]+4;
     }
     
 
     CGRect frame ;
     if (style == BAlertModalToastTop) {
-        frame  = CGRectMake((MSCW-width)/2,MSCH*0.15, width, height);
+        frame  = CGRectMake(([UIScreen mainScreen].bounds.size.width-width)/2,[UIScreen mainScreen].bounds.size.height*0.15, width, height);
     }else if (style == BAlertModalToastCenter){
-        frame  = CGRectMake((MSCW-width)/2,(MSCH-height)/2, width, height);
+        frame  = CGRectMake(([UIScreen mainScreen].bounds.size.width-width)/2,([UIScreen mainScreen].bounds.size.height-height)/2, width, height);
     }else{
-        frame  = CGRectMake((MSCW-width)/2,MSCH*0.90-height, width, height);
+        frame  = CGRectMake(([UIScreen mainScreen].bounds.size.width-width)/2,[UIScreen mainScreen].bounds.size.height*0.90-height, width, height);
     }
     toastView.alpha = 1;
     toastView.text = message;
@@ -114,7 +115,7 @@
 
 
 //根据字符串长度获取对应的宽度或者高度
--(CGFloat)stringText:(NSString *)text font:(CGFloat)font isHeightFixed:(BOOL)isHeightFixed fixedValue:(CGFloat)fixedValue
+-(CGFloat)stringText:(NSString *)text font:(UIFont *)font isHeightFixed:(BOOL)isHeightFixed fixedValue:(CGFloat)fixedValue
 {
     CGSize size;
     if (isHeightFixed) {
@@ -125,7 +126,7 @@
     
     CGSize resultSize;
     //返回计算出的size
-    resultSize = [text boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:font]} context:nil].size;
+    resultSize = [text boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: font} context:nil].size;
     
     if (isHeightFixed) {
         return resultSize.width;

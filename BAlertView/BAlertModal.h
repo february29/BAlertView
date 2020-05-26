@@ -15,7 +15,7 @@
 
 //#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "BAletToastManager.h"
+#import "BAlertToastManager.h"
 #import "BAlertViewManager.h"
 
 
@@ -25,9 +25,23 @@
 
 // MARK: - 属性
 
-///view的背景颜色
-@property(nonatomic,retain,readwrite)UIColor *backgroundColor;
-@property(nonatomic)BOOL shouldTapOutSideClosed;
+@property (nonatomic,strong) BAlertViewManager *viewManager;
+@property (nonatomic,strong) BAlertToastManager *toastManager;
+
+
+
+// 单次配置。 只配置最后显示的一次view。
+//@property (nonatomic,strong) BAlertViewConfig *alertViewConfig;
+
+//view的背景颜色
+@property(nonatomic,strong)UIColor *backgroundColor;
+// 点击外部隐藏
+@property(nonatomic ,assign)BOOL shouldTapOutSideClosed;
+// 隐藏状态栏
+@property (nonatomic,assign) BOOL alertViewPrefersStatusBarHidden;
+
+// 状态栏样式
+@property (nonatomic,assign) UIStatusBarStyle aletViewPreferredStatusBarStyle;
 
 
 // MARK: - 方法
@@ -64,7 +78,8 @@
 //-(void)hideView:(UIView *)view hideAnimationBlock:(BAlertModelHideAnimationBlock)hideAnimationBlock;
 
 
-
+// MARK: - ⚠️
+// ⚠️  弹窗先时候 原始位置未记录， 弹窗消失后原始位置丢失。再次先试试位置可能混乱
 
 
 

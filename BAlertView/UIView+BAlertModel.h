@@ -13,8 +13,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIView (BAlertModel)
 
+//显示的样式
 @property (nonatomic,assign) BAlertModalViewDisPlayStyle b_showStyle;
+
+//隐藏样式
 @property (nonatomic,assign) BAlertModalViewDisPlayStyle b_hideStyle;
+
+//view配置
+//@property (nonatomic,strong) BAlertViewConfig *b_alertViewConfig;
+
 
 
 /// 显示动画block
@@ -34,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 点击外部按钮隐藏完毕后执行的block（点击外部隐藏最后一个，所以执行的是最有一个view的block）
 @property (nonatomic,copy) BAlertModelHideCompletionBlock b_tapOutsideHideCompletionBlock;
+
+
 
 
 @end

@@ -13,11 +13,14 @@
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong) UITableView *mTableView;
-@property (nonatomic,strong) NSArray *dataArray;
+@property (nonatomic,strong) NSArray *toastDataArray;
+@property (nonatomic,strong) NSArray *alertViewDataArray;
 
-@property (nonatomic,strong) UILabel *firstView;
+@property (nonatomic,strong) NSMutableArray *viewArray;
 
-@property (nonatomic,strong) UILabel *secendView;
+//@property (nonatomic,strong) UILabel *firstView;
+//
+//@property (nonatomic,strong) UILabel *secendView;
 
 @end
 
@@ -32,53 +35,96 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     
-    _dataArray = @[@"toast",@"cennterView",@"BottomView",@"NoneView",@"left",@"dropList",@"custom",@"",@"",@""];
-   
+     _toastDataArray = @[@"吐司",@"长吐司",@"位置吐司"];
+    
+    
+    
+     _alertViewDataArray = @[@"位置根据传入的view frame决定",@"默认中间 宽高自定",@"底部 view宽度高度自定 window不缩小",@"底部 window 缩小",@"从左侧移动过来",@"从左侧移动过来 keyWindow跟随移动",@"从右侧移动过来",@"从右侧移动过来 keyWindow跟随移动",@"下拉样式显示",@"自定义 尚需完善",@"点击外部不可回收",@"背景改变问题",@"键盘冲突测试， 点击外部先隐藏键盘",@"多个弹窗同时出现",@"二次弹窗",@"状态栏隐藏",@"状态栏样式改变",@"点击外部隐藏完毕后执行block"];
     self.mTableView.hidden = NO;
+    
+    
+    
+    _viewArray = [NSMutableArray new];
+    
+   
+    [_alertViewDataArray enumerateObjectsUsingBlock:^(NSString *title, NSUInteger idx, BOOL * _Nonnull stop) {
+        UIView * view = [UIView new];
+        view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1] ;
+        view.frame = CGRectMake(100, 100, 200, 200);
+        [_viewArray addObject:view];
+        
+        if (idx == 10) {
+            //点击外部不可回收，为view添加手势回收。根据实际情况可添加按钮等关闭
+            //隐藏所有view。
+            UITapGestureRecognizer *tap2= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideAll)];
+            [view addGestureRecognizer:tap2];
+            
+        }
+        if (idx == 12) {
+            //键盘冲突测试， 点击外部先隐藏键盘
+            UITextField *tf = [[UITextField alloc]initWithFrame:CGRectMake(0, 50, 200, 50)];
+            tf.placeholder = @"键盘测试";
+            tf.layer.borderColor = [UIColor greenColor].CGColor;
+            tf.layer.borderWidth = 1;
+            [view addSubview:tf];
+        }
+        
+        if (idx == 14) {
+            UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 50, 200, 50)];
+            btn.backgroundColor = [UIColor blueColor];
+            [btn setTitle:@"点击显示第二个弹窗" forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(secondShow) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:btn];
+        }
+        
+        
+        
+    }];
+    
     
   
     
 }
 
--(UILabel *)firstView{
-    if (!_firstView) {
-        _firstView = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
-        _firstView.userInteractionEnabled = YES;
-//        _firstView.text = @"000000";
-        UITapGestureRecognizer *tap= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(secondShow)];
-        [_firstView addGestureRecognizer:tap];
-        [_firstView setBackgroundColor:[UIColor yellowColor]];
-           
-           
-    }
-    return _firstView;
-}
-
--(UILabel *)secendView{
-    if (!_secendView) {
-
-        _secendView = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
-        _secendView.userInteractionEnabled = YES;
-        
-        //隐藏所有view。
-        UITapGestureRecognizer *tap2= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideAll)];
-        [_secendView addGestureRecognizer:tap2];
-        
-        //隐藏完毕后执行block
-        _secendView.b_tapOutsideHideCompletionBlock = ^{
-            NSLog(@"点击外部隐藏block");
-        };
-        
-        //键盘弹出时点击外部会先收键盘
-        UITextField *tf = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 100, 50)];
-        tf.layer.borderColor = UIColor.greenColor.CGColor;
-        tf.layer.borderWidth = 1;
-        [_secendView addSubview:tf];
-        _secendView.backgroundColor = [UIColor purpleColor];
-    }
-    return _secendView;
-}
-
+//-(UILabel *)firstView{
+//    if (!_firstView) {
+//        _firstView = [[UILabel alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
+//        _firstView.userInteractionEnabled = YES;
+////        _firstView.text = @"000000";
+//        UITapGestureRecognizer *tap= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(secondShow)];
+//        [_firstView addGestureRecognizer:tap];
+//        [_firstView setBackgroundColor:[UIColor yellowColor]];
+//
+//
+//    }
+//    return _firstView;
+//}
+//
+//-(UILabel *)secendView{
+//    if (!_secendView) {
+//
+//        _secendView = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
+//        _secendView.userInteractionEnabled = YES;
+//
+//        //隐藏所有view。
+//        UITapGestureRecognizer *tap2= [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideAll)];
+//        [_secendView addGestureRecognizer:tap2];
+//
+//        //隐藏完毕后执行block
+//        _secendView.b_tapOutsideHideCompletionBlock = ^{
+//            NSLog(@"点击外部隐藏block");
+//        };
+//
+//        //键盘弹出时点击外部会先收键盘
+//        UITextField *tf = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 100, 50)];
+//        tf.layer.borderColor = UIColor.greenColor.CGColor;
+//        tf.layer.borderWidth = 1;
+//        [_secendView addSubview:tf];
+//        _secendView.backgroundColor = [UIColor purpleColor];
+//    }
+//    return _secendView;
+//}
+//
 
 -(UITableView *)mTableView{
     
@@ -109,112 +155,229 @@
 
 
 
-
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    switch (indexPath.row) {
-        case 0:
-        {
-          //普通用法
-//            [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！"];
-             [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！" disPlayStyle:BAlertModalToastBottom showTime:BAlertModalToastLong];
-            
-          // [[BAlertModal sharedInstance]makeToast:@"he000"];
-            
-            //宏定义用法
-
-//            BMAKETOAST([NSNull null]);
-            BMAKECENTERTOAST(@"DAFDFASDFASDFA");
-          break;
-        }
-        case 1:{
-            [[BAlertModal sharedInstance]showAlerView:self.secendView disPlayStyle:BAlertModalViewCenter];
-            
-            break;
-        }
-        case 2:{
-            //bottom
-//           [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
-            [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewBottom];
-//            [[BAlertModal sharedInstance]setBackgroundColor:[UIColor brownColor]];
-             [[BAlertModal sharedInstance]setShouldTapOutSideClosed:NO];
-            break;
-        }
-         
-        case 3:{
-        
-           [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewNone];
-           break;
-       
-        }
-           
-       
-        case 4:{
-           [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewLeftMove];
-           break;
-       
-        }
-       
-        case 5:{
-          
-//           UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
-//
-//            CGRect rect=[sender convertRect: sender.bounds toView:window];
-
-//           self.firstView.frame = CGRectMake(rect.origin.x, rect.origin.y+rect.size.height+1, rect.size.width,self.firstView.frame.size.height);
-
-            //实际使用时 可计算sender位置 模仿下来选择框
-           [[BAlertModal sharedInstance]showAlerView:self.firstView disPlayStyle:BAlertModalViewDropList];
-           break;
-        }
-               
-        case 6:{
-            
-            [[BAlertModal sharedInstance]showAlerView:self.firstView showAnimationBlock:^(UIView *view) {
-                
-                CGRect rect = view.frame;
-                rect.origin.y = 0;
-                [UIView  animateWithDuration:1 animations:^{
-                    view.frame = rect;
-                } completion:^(BOOL finished) {
-                    
-                }];
-            } hideAnimationBlock:^(UIView *view) {
-               
-                CGRect rect = view.frame;
-                 rect.origin.x = 0;
-                 [UIView  animateWithDuration:1 animations:^{
-                     view.frame = rect;
-                 } completion:^(BOOL finished) {
-                     
-                 }];
-                
-                //返回动画时间 告诉BAlerModel 动画执行完毕可以进行清理工作。
-                return 3.0;
-            }];
-            break;
-        }
-        case 7:{
-            break;
-        }
-        case 8:{
-            break;
-        }
-            
-            
-            
-        default:
-            break;
-    }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 1;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.dataArray.count;
+    return section == 0?self.toastDataArray.count:self.alertViewDataArray.count;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    if (indexPath.section == 0) {
+        // 吐司测试
+        switch (indexPath.row) {
+            case 0:
+            {
+              //普通用法
+    
+                 [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！"];
+                
+                //宏定义用法
+//                BMAKECENTERTOAST(@"DAFDFASDFASDFA");
+              break;
+            }
+            case 1:
+            {
+              //长吐司
+   
+                 [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！" disPlayStyle:BAlertModalToastCenter showTime:BAlertModalToastLong];
+    
+              break;
+            }
+            case 2:
+            {
+              //位置
+    
+                 [[BAlertModal sharedInstance]makeToast:@"前途是光明的，道路是曲折的。世界和平！！" disPlayStyle:BAlertModalToastTop showTime:BAlertModalToastshort];
+              break;
+            }
+        }
+    
+    }else if (indexPath.section == 1){
+        
+        switch (indexPath.row) {
+            
+            case 0:{
+                //BAlertModalViewNone,// 位置根据传入的view frame决定
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewNone];
+                
+                break;
+            }
+            case 1:{
+                //BAlertModalViewCenter,//默认中间 宽高自定
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewCenter];
+    
+                break;
+            }
+             
+            case 2:{
+               // BAlertModalViewBottom ,//底部 view宽度高度自定 window不缩小
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewBottom];
+    
+               break;
+           
+            }
+               
+           
+            case 3:{
+                //BAlertModalViewBottom2,//底部 window 缩小
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewBottom2];
+
+               break;
+           
+            }
+           
+            case 4:{
+                 //BAlertModalViewLeftMove,//从左侧移动过来
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewLeftMove];
+    
+               
+               break;
+            }
+                   
+            case 5:{
+                
+                //BAlertModalViewLeftMove2,//从左侧移动过来 keyWindow跟随移动
+                
+                
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewLeftMove2];
+                
+ 
+                break;
+            }
+            case 6:{
+                //BAlertModalViewRightMove,//从右侧移动过来
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewRightMove];
+                break;
+            }
+            case 7:{
+               // BAlertModalViewRightMove2,//从右侧移动过来 keyWindow跟随移动
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewRightMove2];
+                break;
+            }
+            case 8:{
+               // BAlertModalViewDropList, //下拉样式显示
+                //实际使用时 可计算sender位置 模仿下来选择框
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] disPlayStyle:BAlertModalViewDropList];
+                break;
+            }
+            case 9:{
+               // BAlertViewAnimateCustom // 自定义 尚需完善
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] showAnimationBlock:^(UIView *view) {
+                     
+                     CGRect rect = view.frame;
+                     rect.origin.y = 0;
+                     [UIView  animateWithDuration:1 animations:^{
+                         view.frame = rect;
+                     } completion:^(BOOL finished) {
+                         
+                     }];
+                 } hideAnimationBlock:^(UIView *view) {
+                    
+                     CGRect rect = view.frame;
+                      rect.origin.x = 0;
+                      [UIView  animateWithDuration:1 animations:^{
+                          view.frame = rect;
+                      } completion:^(BOOL finished) {
+                          
+                      }];
+                     
+                     //返回动画时间 告诉BAlerModel 动画执行完毕可以进行清理工作。
+                     return 3.0;
+                 }];
+                break;
+            }
+            case 10:{
+                
+//                @"点击外部不可回收",@"背景改变问题",@"键盘冲突测试",@"多个弹窗同时出现",@"二次弹窗",@"状态栏问题"];
+               // 点击外部不可回收
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row] ];
+                
+                // 必须放在后面show后面 否则无效
+                [[BAlertModal sharedInstance]setShouldTapOutSideClosed:NO];
+                
+                break;
+            }
+            case 11:{
+               // 背景改变问题
+                
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row]];
+                //局部设置 必须放在后面show后面 否则无效
+                [BAlertModal sharedInstance].backgroundColor = [UIColor greenColor];
+//                [BAlertModal sharedInstance].viewManager.backgroundColor = [UIColor greenColor];
+                          
+                //全局设置， 设置后都改变
+//                [BAlertModal  sharedInstance].viewManager.config.alertViewBackGroundColor = [UIColor greenColor];
+                break;
+            }
+            case 12:{
+               // "键盘冲突测试
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row]];
+                break;
+            }
+            case 13:{
+               // 多个弹窗同时出现
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row]];
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row -1] disPlayStyle:BAlertModalViewBottom];
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row-2]disPlayStyle:BAlertModalViewLeftMove];
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row-3]disPlayStyle:BAlertModalViewRightMove];
+                break;
+            }
+            case 14:{
+               // 二次弹窗
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row]];
+                
+                
+                break;
+            }
+            case 15:{
+               //隐藏状态栏
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row]];
+                
+                
+                [BAlertModal sharedInstance].alertViewPrefersStatusBarHidden = YES;
+
+               
+                
+                break;
+            }
+            case 16:{
+               // 状态栏样式改变
+                [[BAlertModal sharedInstance]showAlerView:self.viewArray[indexPath.row]];
+                
+                
+                [BAlertModal sharedInstance].aletViewPreferredStatusBarStyle = UIStatusBarStyleLightContent;
+                
+                break;
+            }
+            case 17:{
+               //  点击外部隐藏完毕后执行block
+                UIView *view = self.viewArray[indexPath.row];
+                view.b_tapOutsideHideCompletionBlock = ^{
+                    NSLog(@"啦啦啦");
+                } ;
+                [[BAlertModal sharedInstance]showAlerView:view];
+                
+                
+                
+                
+                break;
+            }
+               
+                
+                
+            default:
+                break;
+        }
+    }
+    
+
+}
+
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -225,24 +388,35 @@
     }
     
     //cell配置
-    cell.textLabel.text = self.dataArray[indexPath.row];
+    if (indexPath.section == 0) {
+         cell.textLabel.text = self.toastDataArray[indexPath.row];
+    }else if (indexPath.section == 1) {
+         cell.textLabel.text = self.alertViewDataArray[indexPath.row];
+    }
+  
     
     
     
     return cell;
 }
 
-
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 40;
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    return [UIView new];
+    
+    UILabel *lable = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 40)];
+    lable.backgroundColor = [UIColor grayColor];
+    lable.text = section == 0?@"吐司":@"弹窗";
+    return lable;
 }
 
 
 
 -(void)secondShow{
-    
-    [[BAlertModal sharedInstance]showAlerView:self.secendView disPlayStyle:BAlertModalViewBottom animated:YES];
+
+    [[BAlertModal sharedInstance]showAlerView:self.viewArray[0] disPlayStyle:BAlertModalViewBottom animated:YES];
 //    [BAlertModal sharedInstance].shouldTapOutSideClosed = NO;
 }
 

@@ -7,22 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BAlertConfig.h"
+#import "BAlertViewConfig.h"
 
-typedef NS_ENUM(NSInteger,BAlertModalViewDisPlayStyle){
-    BAlertModalViewNone,// 位置根据传入的view frame决定
-    BAlertModalViewCenter,//默认中间 宽高自定
-    BAlertModalViewBottom ,//底部 view宽度与屏幕等宽，高度自定 window不缩小
-    BAlertModalViewBottom2,//底部 window 缩小
-    BAlertModalViewLeftMove,//从左侧移动过来
-    BAlertModalViewLeftMove2,//从左侧移动过来 keyWindow跟随移动
-    BAlertModalViewRightMove,//从右侧移动过来
-    BAlertModalViewRightMove2,//从右侧移动过来 keyWindow跟随移动
-    BAlertModalViewDropList, //下拉样式显示
-    BAlertViewAnimateCustom // 自定义 尚需完善
-   
-    
-};
+
 
 
 
@@ -41,22 +28,42 @@ typedef void(^BAlertModelHideCompletionBlock)(void);
 
 
 
-@interface BAlerterViewController : UIViewController
-
-@property(nonatomic,readwrite,retain)UIColor *backgroundColor;
-@property(nonatomic)BOOL shouldTapOutSideClosed;
-@property(nonatomic,readwrite,retain) UIButton *backBtn;
-
-@property (nonatomic,strong) NSMutableArray *viewsArray;
-
-@end
 
 @interface BAlertViewManager : NSObject
 
+//MARK:- 配置
 
-///view的背景颜色
-@property(nonatomic,retain,readwrite)UIColor *backgroundColor;
-@property(nonatomic)BOOL shouldTapOutSideClosed;
+//==============================全局配置====================
+//全局配置使用BAlertViewConfig配置 配置后应用中所有弹窗通用
+//默认 [BAlertViewConfig defaultConfig]
+@property (nonatomic,strong) BAlertViewConfig *config;
+
+
+//==============================单次配置====================
+
+// view的背景颜色
+@property(nonatomic,strong)UIColor *backgroundColor;
+
+// 点击外部是否关闭
+@property(nonatomic,assign)BOOL shouldTapOutSideClosed;
+
+// 隐藏状态栏
+@property (nonatomic,assign) BOOL alertViewPrefersStatusBarHidden;
+
+// 状态栏样式
+@property (nonatomic,assign) UIStatusBarStyle aletViewPreferredStatusBarStyle;
+
+
+
+//MARK:- 属性
+
+/// 记录显示出来view的array
+@property (nonatomic,strong) NSMutableArray *showViewArray;
+
+
+
+
+//MARK:- 方法
 
 +(instancetype)manager;
 
@@ -84,3 +91,22 @@ typedef void(^BAlertModelHideCompletionBlock)(void);
 
 @end
 
+
+@interface BAlerterViewController : UIViewController
+
+
+
+@property(nonatomic,strong)UIColor *backgroundColor;
+
+@property(nonatomic,assign)BOOL shouldTapOutSideClosed;
+
+@property (nonatomic,assign) UIStatusBarStyle aletViewPreferredStatusBarStyle;
+
+@property (nonatomic,assign) BOOL alertViewPrefersStatusBarHidden;
+
+@property(nonatomic,strong) UIButton *backBtn;
+
+//@property (nonatomic,strong) NSMutableArray *viewsArray;
+@property (nonatomic,weak) BAlertViewManager *manager;
+
+@end

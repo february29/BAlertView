@@ -12,6 +12,8 @@
 
 NSString *const bShowStyleKey = @"bShowStyleKey";
 NSString *const bHideStyleKey = @"bHideStyleKey";
+NSString *const bAlertViewConfig = @"bAlertViewConfig";
+
 NSString *const bShowBlockKey = @"bShowBlockKey";
 NSString *const bHideBlockKey = @"bHideBlockKey";
 NSString *const bShowCompletionBlockKey = @"bShowCompletionBlockKey";
@@ -40,6 +42,13 @@ NSString *const bTapOutsideHideCompletionBlock = @"bTapOutsideHideCompletionBloc
     objc_setAssociatedObject(self, &bHideStyleKey, @(b_hideStyle), OBJC_ASSOCIATION_ASSIGN);
 }
 
+//-(BAlertViewConfig *)b_alertViewConfig{
+//    return objc_getAssociatedObject(self, &bAlertViewConfig);
+//}
+//
+//- (void)setB_alertViewConfig:(BAlertViewConfig *)b_alertViewConfig{
+//     objc_setAssociatedObject(self, &bAlertViewConfig, b_alertViewConfig, OBJC_ASSOCIATION_RETAIN);
+//}
 
 - (BAlertModelshowAnimationBlock)b_showBlock{
     return objc_getAssociatedObject(self, &bShowBlockKey);

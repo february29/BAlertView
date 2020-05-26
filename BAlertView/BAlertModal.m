@@ -7,7 +7,7 @@
 //
 
 #import "BAlertModal.h"
-#import "BAlertConfig.h"
+#import "BAlertViewConfig.h"
 #import "UIView+BAlertModel.h"
 
 //NSString *const bAlertModelViewKey = @"bAlertModelViewKey";
@@ -20,8 +20,6 @@
 
 @interface BAlertModal()
 
-@property (nonatomic,strong) BAlertViewManager *viewManager;
-@property (nonatomic,strong) BAletToastManager *toastManager;
 
 @end
 
@@ -44,7 +42,7 @@
     if (self) {
 
         _viewManager = [BAlertViewManager manager];
-        _toastManager = [BAletToastManager manager];
+        _toastManager = [BAlertToastManager manager];
         
     }
     return self;
@@ -151,5 +149,13 @@
 
 -(void)setShouldTapOutSideClosed:(BOOL)shouldTapOutSideClosed{
     [self.viewManager setShouldTapOutSideClosed:shouldTapOutSideClosed];
+}
+
+-(void)setAlertViewPrefersStatusBarHidden:(BOOL)alertViewPrefersStatusBarHidden{
+    [self.viewManager setAlertViewPrefersStatusBarHidden:alertViewPrefersStatusBarHidden];
+}
+
+-(void)setAletViewPreferredStatusBarStyle:(UIStatusBarStyle)aletViewPreferredStatusBarStyle{
+    [self.viewManager setAletViewPreferredStatusBarStyle:aletViewPreferredStatusBarStyle];
 }
 @end
