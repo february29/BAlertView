@@ -18,7 +18,7 @@
 
 @property (nonatomic,strong) NSMutableArray *viewArray;
 
-//@property (nonatomic,strong) UILabel *firstView;
+@property (nonatomic,strong) UIView *globleView;
 //
 //@property (nonatomic,strong) UILabel *secendView;
 
@@ -39,7 +39,7 @@
     
     
     
-     _alertViewDataArray = @[@"位置根据传入的view frame决定",@"默认中间 宽高自定",@"底部 view宽度高度自定 window不缩小",@"底部 window 缩小",@"从左侧移动过来",@"从左侧移动过来 keyWindow跟随移动",@"从右侧移动过来",@"从右侧移动过来 keyWindow跟随移动",@"下拉样式显示",@"自定义 尚需完善",@"点击外部不可回收",@"背景改变问题",@"键盘冲突测试， 点击外部先隐藏键盘",@"多个弹窗同时出现",@"二次弹窗",@"状态栏隐藏",@"状态栏样式改变",@"点击外部隐藏完毕后执行block"];
+     _alertViewDataArray = @[@"位置根据传入的view frame决定",@"默认中间 宽高自定",@"底部 view宽度高度自定 window不缩小",@"底部 window 缩小",@"从左侧移动过来",@"从左侧移动过来 keyWindow跟随移动",@"从右侧移动过来",@"从右侧移动过来 keyWindow跟随移动",@"下拉样式显示",@"自定义 尚需完善",@"点击外部不可回收",@"背景改变问题",@"键盘冲突测试， 点击外部先隐藏键盘",@"多个弹窗同时出现",@"二次弹窗",@"状态栏隐藏",@"状态栏样式改变",@"显示隐藏完毕后执行block",@"点击外部隐藏完毕后执行block",@"view状态"];
     self.mTableView.hidden = NO;
     
     
@@ -78,12 +78,31 @@
         }
         
         
+        __weak typeof(view) wkview = view;
+        if (idx == 19) {
+            view.b_showCompletionBlock = ^{
+                NSLog(@"view 状态： %ld",(long)(wkview.b_alertViewState));
+            };
+            view.b_hideCompletionBlock  = ^{
+                NSLog(@"view 状态： %ld",(long)(wkview.b_alertViewState));
+            };
+        }
+        
+        
         
     }];
     
     
   
     
+}
+
+- (UIView *)globleView{
+    if (!_globleView) {
+        _globleView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 200, 200)];
+        _globleView.backgroundColor = [UIColor whiteColor];
+    }
+    return _globleView;
 }
 
 //-(UILabel *)firstView{
@@ -356,9 +375,13 @@
             case 17:{
                //  点击外部隐藏完毕后执行block
                 UIView *view = self.viewArray[indexPath.row];
-                view.b_tapOutsideHideCompletionBlock = ^{
-                    NSLog(@"啦啦啦");
-                } ;
+                view.b_showCompletionBlock = ^{
+                    NSLog(@"显示啦");
+                };
+                view.b_hideCompletionBlock = ^{
+                    NSLog(@"隐藏啦");
+                };
+                
                 [[BAlertModal sharedInstance]showAlerView:view];
                 
                 
@@ -366,8 +389,37 @@
                 
                 break;
             }
+           case 18:{
+              //  点击外部隐藏完毕后执行block
+               UIView *view = self.viewArray[indexPath.row];
+               view.b_tapOutsideHideCompletionBlock = ^{
+                   NSLog(@"点击外部隐藏啦");
+               } ;
+               [[BAlertModal sharedInstance]showAlerView:view];
+               
+               
+               
+               
+               break;
+           }
+            case 19:{
+               //
                
                 
+                UIView *view = self.viewArray[indexPath.row];
+                
+                NSLog(@"view state: %ld",(long)(view.b_alertViewState));
+                [[BAlertModal sharedInstance]showAlerView:view];
+                
+               
+               
+                
+                
+                
+                
+                break;
+            }
+                     
                 
             default:
                 break;

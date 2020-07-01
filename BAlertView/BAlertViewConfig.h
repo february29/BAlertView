@@ -23,6 +23,20 @@ typedef NS_ENUM(NSInteger,BAlertModalViewDisPlayStyle){
     
 };
 
+typedef NS_ENUM(NSInteger,BAlertViewState){
+    BAlertViewStateHide,//隐藏状态
+    BAlertViewStateHidding ,//正在执行隐藏动画
+    BAlertViewStateShowing,// 正在执行显示动画
+    BAlertViewStateShow,//显示状态
+
+};
+
+typedef void(^BAlertModelshowAnimationBlock)(UIView * _Nullable view);
+typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView * _Nullable view);
+
+typedef void(^BAlertModelshowCompletionBlock)(void);
+typedef void(^BAlertModelHideCompletionBlock)(void);
+
 
 NS_ASSUME_NONNULL_BEGIN
 

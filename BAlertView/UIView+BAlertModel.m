@@ -12,6 +12,7 @@
 
 NSString *const bShowStyleKey = @"bShowStyleKey";
 NSString *const bHideStyleKey = @"bHideStyleKey";
+NSString *const bAlertViewStateKey = @"bAlertViewStateKey";
 NSString *const bAlertViewConfig = @"bAlertViewConfig";
 
 NSString *const bShowBlockKey = @"bShowBlockKey";
@@ -41,6 +42,15 @@ NSString *const bTapOutsideHideCompletionBlock = @"bTapOutsideHideCompletionBloc
 -(void)setB_hideStyle:(BAlertModalViewDisPlayStyle)b_hideStyle{
     objc_setAssociatedObject(self, &bHideStyleKey, @(b_hideStyle), OBJC_ASSOCIATION_ASSIGN);
 }
+
+- (BAlertViewState)b_alertViewState{
+    return [objc_getAssociatedObject(self, &bAlertViewStateKey) integerValue];
+    
+}
+- (void)setB_alertViewState:(BAlertViewState)b_alertViewState{
+     objc_setAssociatedObject(self, &bAlertViewStateKey, @(b_alertViewState), OBJC_ASSOCIATION_ASSIGN);
+}
+
 
 //-(BAlertViewConfig *)b_alertViewConfig{
 //    return objc_getAssociatedObject(self, &bAlertViewConfig);
@@ -78,7 +88,7 @@ NSString *const bTapOutsideHideCompletionBlock = @"bTapOutsideHideCompletionBloc
 }
 
 -(void)setB_hideCompletionBlock:(BAlertModelHideCompletionBlock)b_hideCompletionBlock{
-    objc_setAssociatedObject(self, &b_hideCompletionBlock, b_hideCompletionBlock, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, &bHideCompletionBlockKey, b_hideCompletionBlock, OBJC_ASSOCIATION_COPY);
 
 }
 

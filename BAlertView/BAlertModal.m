@@ -8,7 +8,7 @@
 
 #import "BAlertModal.h"
 #import "BAlertViewConfig.h"
-#import "UIView+BAlertModel.h"
+
 
 //NSString *const bAlertModelViewKey = @"bAlertModelViewKey";
 //NSString *const bAlertModelDisplayStyleKey = @"bAlertModelDisplayStyleKey";

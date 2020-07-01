@@ -163,6 +163,7 @@
         _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         _window.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _window.opaque = NO;
+        _window.windowLevel = UIWindowLevelAlert;
         
         
     }
@@ -197,7 +198,10 @@
     
     view.b_showStyle = style;
     view.b_hideStyle = style;
-    view.b_showCompletionBlock = completion;
+    if (completion) {
+        view.b_showCompletionBlock = completion;
+    }
+    
     [_showViewArray addObject:view];
     
     
@@ -208,10 +212,11 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [wkself.window makeKeyAndVisible];
         if(animated){
-            [wkself viewShowAnimateWithAnimateType:style completionBlock:completion];
+            [wkself viewShowAnimateWithAnimateType:style];
         }else{
-            if (completion) {
-                completion();
+            view.b_alertViewState = BAlertViewStateShow;
+            if (view.b_showCompletionBlock) {
+                view.b_showCompletionBlock();
             }
         }
     });
@@ -220,11 +225,14 @@
 }
 
 
--(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType completionBlock:(void(^)(void))completion{
+-(void)viewShowAnimateWithAnimateType:(BAlertModalViewDisPlayStyle)animateType{
     
     
     
     __weak typeof(self) wkself = self;
+    
+    wkself.contentView.b_alertViewState = BAlertViewStateShowing;
+    
     switch (animateType) {
         case BAlertModalViewBottom2:
         {
@@ -254,8 +262,9 @@
                 
             } completion:^(BOOL finished) {
 //                wkself.contentView.layer.shouldRasterize = NO;
-                if (completion) {
-                    completion();
+                wkself.contentView.b_alertViewState = BAlertViewStateShow;
+                if (wkself.contentView.b_showCompletionBlock) {
+                    wkself.contentView.b_showCompletionBlock();
                 }
             }];
             
@@ -273,8 +282,9 @@
                 wkself.contentView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
             } completion:^(BOOL finished) {
 //                wkself.contentView.layer.shouldRasterize = NO;
-                if (completion) {
-                    completion();
+                wkself.contentView.b_alertViewState = BAlertViewStateShow;
+                if (wkself.contentView.b_showCompletionBlock) {
+                    wkself.contentView.b_showCompletionBlock();
                 }
             }];
             
@@ -299,8 +309,9 @@
                 wkself.contentView.alpha = 1;
             } completion:^(BOOL finished) {
 //                wkself.contentView.layer.shouldRasterize = NO;
-                if (completion) {
-                    completion();
+                wkself.contentView.b_alertViewState = BAlertViewStateShow;
+                if (wkself.contentView.b_showCompletionBlock) {
+                    wkself.contentView.b_showCompletionBlock();
                 }
             }];
 
@@ -328,8 +339,9 @@
                 wkself.contentView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
             } completion:^(BOOL finished) {
 //                wkself.contentView.layer.shouldRasterize = NO;
-                if (completion) {
-                    completion();
+                wkself.contentView.b_alertViewState = BAlertViewStateShow;
+                if (wkself.contentView.b_showCompletionBlock) {
+                    wkself.contentView.b_showCompletionBlock();
                 }
 
             }];
@@ -359,9 +371,9 @@
                 wkself.contentView.transform = CGAffineTransformIdentity;
             } completion:^(BOOL finished) {
 //                wkself.contentView.layer.shouldRasterize = NO;
-                
-                if (completion) {
-                    completion();
+                wkself.contentView.b_alertViewState = BAlertViewStateShow;
+                if (wkself.contentView.b_showCompletionBlock) {
+                    wkself.contentView.b_showCompletionBlock();
                 }
 
             }];
@@ -371,6 +383,9 @@
             break;
         }
         case BAlertViewAnimateCustom:{
+            //应该在自定义动画block中设置
+//            wkself.contentView.b_alertViewState = BAlertViewStateShow;
+           
             if (wkself.contentView.b_showBlock) {
                 wkself.contentView.b_showBlock(wkself.contentView);
             }
@@ -420,22 +435,26 @@
     
     __weak typeof(self) wkself = self;
     
+    
+    BAlertModalViewDisPlayStyle style = view.b_hideStyle;
+     if (completion) {
+         view.b_hideCompletionBlock = completion;
+     }
+    
+   
     if(!animated){
 //         wkself.viewController.backBtn.alpha = 0;
+        view.b_alertViewState = BAlertViewStateHide;
         [wkself removeView:view];;
-        if(completion){
-            completion();
+        if(view.b_hideCompletionBlock){
+            view.b_hideCompletionBlock();
         }
         return;
     }
     
-   
     
- 
-    BAlertModalViewDisPlayStyle style = view.b_hideStyle;
-    view.b_hideCompletionBlock = completion;
+    view.b_alertViewState = BAlertViewStateHidding;
     
-  
     //动画隐藏时间 自定义模式时动画隐藏不一定为默认值
     __block NSTimeInterval hideDuration = self.config.alertViewAnimateDuration;
     
@@ -462,10 +481,11 @@
                 view.alpha = 0.8f;
             } completion:^(BOOL finished) {
 //                view.layer.shouldRasterize = NO;
+                view.b_alertViewState = BAlertViewStateHide;
                 [wkself removeView:view];
                 view.alpha = 1.0f;
-                if(completion){
-                    completion();
+                if(view.b_hideCompletionBlock){
+                    view.b_hideCompletionBlock();
                 }
             }];
             
@@ -496,13 +516,14 @@
          
                 } completion:^(BOOL finished2){
 //                    view.layer.shouldRasterize = NO;
+                    view.b_alertViewState = BAlertViewStateHide;
                     [wkself removeView:view];
                     view.alpha = 1;
                     frame.size.height = tableH;
                     wkself.contentView.frame = frame;
-                    
-                    if(completion){
-                        completion();
+                   
+                    if(view.b_hideCompletionBlock){
+                        view.b_hideCompletionBlock();
                     }
                     
                     
@@ -535,11 +556,12 @@
                     view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, -view.frame.size.width, 0);
                 } completion:^(BOOL finished) {
 //                    view.layer.shouldRasterize = NO;
+                    view.b_alertViewState = BAlertViewStateHide;
                     [wkself removeView:view];
                     view.alpha = 1;
                     view.transform = CGAffineTransformTranslate(CGAffineTransformIdentity,0, 0);
-                    if(completion){
-                        completion();
+                    if(view.b_hideCompletionBlock){
+                        view.b_hideCompletionBlock();
                     }
                     
                 }];
@@ -573,11 +595,12 @@
 //                   contentView.transform = CGAffineTransformIdentity;
                } completion:^(BOOL finished) {
 //                   view.layer.shouldRasterize = NO;
+                   view.b_alertViewState = BAlertViewStateHide;
                    [wkself removeView:view];
                    view.transform = CGAffineTransformIdentity;
                    view.alpha = 1;
-                   if(completion){
-                       completion();
+                   if(view.b_hideCompletionBlock){
+                       view.b_hideCompletionBlock();
                    }
                    
                }];
@@ -589,11 +612,12 @@
        
         }
         case BAlertModalViewNone:{
-            
             //带完善 ，现背景消失无动画
+            
+            view.b_alertViewState = BAlertViewStateHide;
             [wkself removeView:view];
-            if(completion){
-                completion();
+            if(view.b_hideCompletionBlock){
+                view.b_hideCompletionBlock();
             }
             
             break;
@@ -605,11 +629,15 @@
                
                 dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(hideDuration * NSEC_PER_SEC));
                 dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+                    
+                    //因该在自定义动画中设置
+                    // view.b_alertViewState = BAlertViewStateHide;
+                    
                     [wkself removeView:view];
-                    //不执行,因为通常情况下 完成回调在定义hideblock时设置。
-//                    if(completion){
-//                        completion();
-//                    }
+                    
+                    if(view.b_hideCompletionBlock){
+                        view.b_hideCompletionBlock();
+                    }
                 });
                 
             }else{
@@ -632,12 +660,16 @@
                         view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 0.4);
                     } completion:^(BOOL finished2){
 //                        view.layer.shouldRasterize = NO;
+
+                        view.b_alertViewState = BAlertViewStateHide;
+                        
                         [wkself removeView:view];
                         view.alpha = 1;
                         view.transform = CGAffineTransformIdentity;
-                        if(completion){
-                            completion();
+                        if(view.b_hideCompletionBlock){
+                            view.b_hideCompletionBlock();
                         }
+                        
                         
                     }];
                 }];

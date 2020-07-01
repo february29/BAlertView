@@ -17,6 +17,7 @@
 #import <UIKit/UIKit.h>
 #import "BAlertToastManager.h"
 #import "BAlertViewManager.h"
+#import "UIView+BAlertModel.h"
 
 
 

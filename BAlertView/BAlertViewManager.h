@@ -10,22 +10,11 @@
 #import "BAlertViewConfig.h"
 
 
-
-
-
-
-
-typedef void(^BAlertModelshowAnimationBlock)(UIView *view);
-typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
-
-typedef void(^BAlertModelshowCompletionBlock)(void);
-typedef void(^BAlertModelHideCompletionBlock)(void);
-
-
-
-
-
-
+//typedef void(^BAlertModelshowAnimationBlock)(UIView *view);
+//typedef NSTimeInterval (^BAlertModelHideAnimationBlock)(UIView *view);
+//
+//typedef void(^BAlertModelshowCompletionBlock)(void);
+//typedef void(^BAlertModelHideCompletionBlock)(void);
 
 
 
@@ -67,18 +56,24 @@ typedef void(^BAlertModelHideCompletionBlock)(void);
 
 +(instancetype)manager;
 
+
+// ================================show==================================//
 -(void)showAlerView:(UIView *)view;
 -(void)showAlerView:(UIView *)view  animated:(BOOL)animated;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style;
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated;
+
+/// 显示alert  completion会覆盖 view单独设置的b_showCompletionBlock
 -(void)showAlerView:(UIView *)view disPlayStyle:(BAlertModalViewDisPlayStyle)style animated:(BOOL)animated completionBlock:(void(^)(void))completion;
 
-//隐藏 最后show出来的View
-- (void)hide;
-- (void)hideWithCompletionBlock:(void(^)(void))completion;
-- (void)hideAnimated:(BOOL)animated;
-- (void)hideAnimated:(BOOL)animated completionBlock:(void(^)(void))completion;
 
+// ================================隐藏 最后show出来的View==================================//
+- (void)hide;
+- (void)hideAnimated:(BOOL)animated;
+
+///  隐藏alert completion会覆盖 view单独设置的b_hideCompletionBlock
+- (void)hideWithCompletionBlock:(void(^)(void))completion;
+- (void)hideAnimated:(BOOL)animated completionBlock:(void(^)(void))completion;
 - (void)hideView:(UIView *)view animated:(BOOL)animated  completionBlock:(void(^)(void))completion;
 
 //如果出现二次弹窗时 隐藏所有的弹窗
